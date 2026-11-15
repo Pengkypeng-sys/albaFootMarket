@@ -1,0 +1,74 @@
+import type { Metadata } from "next";
+import { Plus_Jakarta_Sans } from "next/font/google";
+import { CartProvider } from "@/lib/cart";
+import { Shell } from "@/components/Shell";
+import { contact } from "@/lib/brand";
+import "./globals.css";
+
+const font = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font",
+});
+
+export const metadata: Metadata = {
+  // TODO: konfirmasi domain produksi
+  metadataBase: new URL("https://albafoodmarket.example"),
+  title: {
+    default: "Alba Food Market | Kulit Sambosa, Frozen Food & Kurma di Sawangan Depok",
+    template: "%s | Alba Food Market",
+  },
+  description:
+    "Produsen kulit sambosa premium, roti cane beku, camilan, kurma, dan bumbu masak di Sawangan, Depok. Senin–Sabtu 09.00–17.00 WIB.",
+  openGraph: {
+    title: "Alba Food Market",
+    description: "Fresh, Frozen & Healthy food. Sawangan, Depok.",
+    locale: "id_ID",
+    type: "website",
+  },
+  alternates: { canonical: "/" },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FoodEstablishment",
+  name: contact.name,
+  telephone: contact.phoneIntl,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "Perumahan Koperasi BUGN, Jalan Pasir Kaliki 4 Blok B4 No. 70 & 72, Pasir Putih",
+    addressLocality: "Depok",
+    addressRegion: "Jawa Barat",
+    postalCode: "16519",
+    addressCountry: "ID",
+  },
+  openingHoursSpecification: {
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+    opens: "09:00",
+    closes: "17:00",
+  },
+  aggregateRating: {
+    "@type": "AggregateRating",
+    ratingValue: contact.rating.score,
+    reviewCount: contact.rating.count,
+  },
+  paymentAccepted: "Cash, Debit card, NFC mobile payment",
+  sameAs: [contact.instagram, contact.website],
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="id" className={font.variable}>
+      <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <CartProvider>
+          <Shell>{children}</Shell>
+        </CartProvider>
+      </body>
+    </html>
+  );
+}
