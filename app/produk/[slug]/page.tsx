@@ -5,7 +5,7 @@ import { AddBox } from "@/components/AddBox";
 import { Gallery } from "@/components/Gallery";
 import { ProductCard } from "@/components/ProductCard";
 import { ProductMetaBadges } from "@/components/ProductMetaBadges";
-import { categories, formatRp, getProduct, products } from "@/data/products";
+import { categories, formatRp, getCategoryVariants, getProduct, products } from "@/data/products";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -29,6 +29,7 @@ export default async function ProductPage({ params }: Props) {
   const { slug } = await params;
   const product = getProduct(slug);
   if (!product) notFound();
+  const variants = getCategoryVariants(product.category);
   const related = products.filter((p) => p.slug !== product.slug).slice(0, 4);
 
   const jsonLd = {
@@ -64,6 +65,31 @@ export default async function ProductPage({ params }: Props) {
               <span>Rasa</span>
               <b>{product.flavor}</b>
             </p>
+          ) : null}
+          {variants.length > 1 ? (
+            <div className="variant-block">
+              <span className="variant-block-label">
+                Pilih Varian / Rasa:
+              </span>
+              <div className="variant-pill-list">
+                {variants.map((v) => {
+                  const isActive = v.slug === product.slug;
+                  const label = v.flavor || v.pack || v.name;
+                  return (
+                    <Link
+                      key={v.slug}
+                      href={`/produk/${v.slug}`}
+                      className="variant-pill"
+                      data-active={isActive}
+                      scroll={false}
+                    >
+                      <span className="variant-pill-name">{label}</span>
+                      {v.price ? <small className="variant-pill-price">{formatRp(v.price)}</small> : null}
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
           ) : null}
           <div className="price-box">
             {product.price ? (

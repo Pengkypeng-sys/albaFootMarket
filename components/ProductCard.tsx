@@ -1,17 +1,23 @@
 "use client";
 
 import Link from "next/link";
-import { formatRp, thumb, type Product } from "@/data/products";
+import { useState } from "react";
+import { formatRp, getCategoryVariants, thumb, type Product } from "@/data/products";
 import { useCart } from "@/lib/cart";
 import { useLiveProductMeta } from "@/lib/sales";
 import { useReveal } from "./Reveal";
 import { flyToCart } from "@/lib/fly";
 import { Stepper } from "./Stepper";
+import { VariantModal } from "./VariantModal";
 
 export function ProductCard({ product, index = 0 }: { product: Product; index?: number }) {
   const { lines, add, setQty } = useCart();
+  const [modalOpen, setModalOpen] = useState(false);
   const qty = lines.find((l) => l.slug === product.slug)?.qty ?? 0;
   const ref = useReveal<HTMLElement>();
+  const variants = getCategoryVariants(product.category);
+  const hasVariants = variants.length > 1;
+
   const { stock, sold, isLowStock, isOutOfStock } = useLiveProductMeta(
     product.slug,
     product.stock ?? 25,
@@ -91,12 +97,29 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
           disabled={isOutOfStock}
           onClick={() => {
             if (isOutOfStock) return;
-            add(product.slug);
-            flyToCart(ref.current?.querySelector("img") ?? null);
+            if (hasVariants) {
+              setModalOpen(true);
+            } else {
+              add(product.slug);
+              flyToCart(ref.current?.querySelector("img") ?? null);
+            }
           }}
         >
-          {isOutOfStock ? "Stok Habis" : "Tambah"}
+          {isOutOfStock ? "Stok Habis" : hasVariants ? "Tambah (Pilih Rasa)" : "Tambah"}
         </button>
+      )}
+
+      {hasVariants && (
+        <VariantModal
+          isOpen={modalOpen}
+          initialProduct={product}
+          variants={variants}
+          onClose={() => setModalOpen(false)}
+          onAdd={(slug, q, targetEl) => {
+            add(slug, q);
+            flyToCart(targetEl || ref.current?.querySelector("img") || null);
+          }}
+        />
       )}
     </article>
   );

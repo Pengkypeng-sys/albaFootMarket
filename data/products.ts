@@ -385,6 +385,11 @@ export function getProduct(slug: string) {
   return products.find((p) => p.slug === slug);
 }
 
+/** Dapatkan semua varian produk dalam satu kategori/keluarga produk yang sama */
+export function getCategoryVariants(category: CategoryId): Product[] {
+  return products.filter((p) => p.category === category);
+}
+
 export function shotsOf(p: Product): Shot[] {
   return [{ src: p.image, alt: p.imageAlt }, ...(p.more ?? [])];
 }
