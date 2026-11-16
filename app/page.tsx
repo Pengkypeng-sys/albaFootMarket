@@ -24,6 +24,26 @@ export default function Home() {
           </h1>
           <div className="rise" style={rise(1)}>
             <SearchBox large />
+            <div className="hero-filters">
+              <span className="hero-filters-label">Filter:</span>
+              <div className="hero-filters-list">
+                <Link href="/produk" className="hero-filter-pill hero-filter-active">
+                  Semua
+                </Link>
+                {categories
+                  .filter((c) => c.id !== "semua")
+                  .slice(0, 5)
+                  .map((c) => (
+                    <Link
+                      key={c.id}
+                      href={`/produk?kategori=${c.id}`}
+                      className="hero-filter-pill"
+                    >
+                      {c.label}
+                    </Link>
+                  ))}
+              </div>
+            </div>
           </div>
           <div className="meta rise" style={rise(2)}>
             <StatusBadge />
