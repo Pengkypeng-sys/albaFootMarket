@@ -2077,6 +2077,7 @@ main {
   opacity: 0;
 }
 
+/* Rak produk kulkas */
 .shelf {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -2089,9 +2090,27 @@ main {
   position: relative;
   min-width: 0;
   padding: 0.55rem 0.5rem 1rem;
+  opacity: 1;
+  transform: none;
 }
 
-/* rak kaca: satu papan menerus (tanpa sambungan antar kolom) dengan bibir krom */
+/* Animasi produk terbuka satu per satu mengikuti pergeseran pintu kulkas */
+@keyframes productReveal {
+  0% {
+    opacity: 0.55;
+    transform: scale(0.92) translateY(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.fridge[data-open="true"] .shelf li {
+  animation: productReveal 0.42s cubic-bezier(0.2, 0.9, 0.3, 1.2) calc(var(--order, 1) * 0.11s) backwards;
+}
+
+/* rak kaca: satu papan menerus dengan bibir krom */
 .shelf li::after {
   content: "";
   position: absolute;
@@ -2110,7 +2129,7 @@ main {
   display: block;
   width: 100%;
   aspect-ratio: 1;
-  padding: 4px; /* bingkai warna kategori */
+  padding: 4px;
   border-radius: 14px;
   object-fit: cover;
   background: var(--tone, #fff);
@@ -2119,7 +2138,7 @@ main {
 }
 
 .shelf span {
-  min-height: 4.4em; /* muat 3 baris + padding: semua label sama tinggi */
+  min-height: 4.4em;
   display: grid;
   place-items: center;
   margin-top: 0.45rem;
@@ -2133,80 +2152,317 @@ main {
   text-wrap: balance;
 }
 
-.door {
-  position: absolute;
-  inset-block: 0;
-  z-index: 2;
-  width: calc(50% + 1px);
-  border: 0;
-  background: linear-gradient(100deg, #e8261d, #d90700 55%, #c10600);
-  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.16), inset 0 3px 0 rgba(255, 255, 255, 0.3);
-  color: rgba(255, 255, 255, 0.9);
-  cursor: pointer;
-  transition: transform 1.7s cubic-bezier(0.65, 0, 0.2, 1);
-}
-
-.door[data-side="l"] {
-  left: 0;
-  border-right: 2px solid #25292d; /* celah antar pintu */
-}
-
-.door[data-side="r"] {
-  right: 0;
-  border-left: 2px solid #25292d;
-}
-
-.door svg {
-  position: absolute;
-  top: 14%;
-  left: 50%;
-  margin-left: -17px;
-}
-
-/* gagang krom */
-.handle {
-  position: absolute;
-  top: 24%;
-  bottom: 24%;
-  width: 9px;
-  border-radius: 5px;
-  background: linear-gradient(90deg, #8d989f, #f6f8fa 45%, #7a858d);
-  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.4);
-}
-
-.door[data-side="l"] .handle {
-  right: 12px;
-}
-
-.door[data-side="r"] .handle {
-  left: 12px;
-}
-
+/* ---------- PINTU GESER PENDINGIN (SHOWCASE DOORS) ---------- */
 .door {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 50%;
+  width: calc(50% + 1px);
   border: 0;
-  background: linear-gradient(180deg, #d90700 0%, #b00600 100%);
+  background: linear-gradient(165deg, #f03328 0%, #d90700 45%, #b50500 100%);
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.25), inset 0 3px 6px rgba(255, 255, 255, 0.35),
+    inset 0 -4px 8px rgba(0, 0, 0, 0.35);
   cursor: pointer;
-  z-index: 4;
-  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s 0.35s;
+  overflow: hidden;
 }
 
-.fridge[data-open="true"] .door {
-  visibility: hidden;
+/* Kilauan refleksi kaca pintu */
+.door::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, 0.08) 48%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.06) 52%, transparent 60%);
   pointer-events: none;
+  z-index: 1;
 }
 
+/* Pintu Kiri */
+.door[data-side="l"] {
+  left: 0;
+  z-index: 5;
+  border-right: 2px solid #202428;
+  transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.12s;
+}
+
+/* Pintu Kanan: bergerak dengan jeda halus agar terbuka satu-satu berurutan */
+.door[data-side="r"] {
+  right: 0;
+  z-index: 4;
+  border-left: 2px solid #202428;
+  transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0s;
+}
+
+/* Saat terbuka: Pintu kiri geser duluan, pintu kanan menyusul halus */
 .fridge[data-open="true"] .door[data-side="l"] {
-  transform: translateX(-101%);
+  transform: translateX(-102%);
+  transition: transform 0.72s cubic-bezier(0.22, 1, 0.36, 1) 0s, visibility 0s 0.85s;
 }
 
 .fridge[data-open="true"] .door[data-side="r"] {
-  transform: translateX(101%);
+  transform: translateX(102%);
+  transition: transform 0.72s cubic-bezier(0.22, 1, 0.36, 1) 0.18s, visibility 0s 0.95s;
 }
 
+.fridge[data-open="true"] .door {
+  pointer-events: none;
+  visibility: hidden;
+}
+
+/* Dekorasi ornamen salju pintu */
+.door-decor-snow {
+  position: absolute;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 1.15rem;
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+  z-index: 3;
+}
+
+.door-snow-tl {
+  top: 10px;
+  left: 12px;
+}
+
+.door-snow-br {
+  bottom: 12px;
+  right: 28px;
+}
+
+.door-snow-tr {
+  top: 10px;
+  right: 12px;
+}
+
+.door-snow-bl {
+  bottom: 12px;
+  left: 28px;
+}
+
+/* Gagang pintu krom perak 3D */
+.handle {
+  position: absolute;
+  top: 22%;
+  bottom: 22%;
+  width: 10px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #64748b 0%, #f1f5f9 40%, #ffffff 50%, #64748b 100%);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.45), inset 0 1px 2px rgba(255, 255, 255, 0.8);
+  z-index: 6;
+}
+
+.door[data-side="l"] .handle {
+  right: 10px;
+}
+
+.door[data-side="r"] .handle {
+  left: 10px;
+}
+
+/* Panel konten di permukaan pintu (menarik & tidak polos) */
+.door-panel {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  padding: 0.95rem 0.55rem;
+  box-sizing: border-box;
+  text-align: center;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* 1. Badge Brand Albafroz */
+.door-brand-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.32);
+  border: 1px solid rgba(255, 215, 0, 0.45);
+  border-radius: 10px;
+  padding: 0.35rem 0.5rem;
+  width: 90%;
+  max-width: 135px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.door-crown {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.door-brand-name {
+  font-size: 0.84rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  color: #ffd700;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+  margin-top: 1px;
+}
+
+.door-brand-sub {
+  font-size: 0.56rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.92);
+  letter-spacing: 0.03em;
+}
+
+/* 2. Indikator Digital Suhu Beku (Pintu Kanan) */
+.door-temp-badge {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(12, 22, 34, 0.58);
+  border: 1px solid rgba(125, 211, 252, 0.45);
+  border-radius: 10px;
+  padding: 0.35rem 0.5rem;
+  width: 90%;
+  max-width: 135px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.door-temp-dot {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 6px #10b981;
+  animation: pulseLed 1.8s infinite;
+}
+
+@keyframes pulseLed {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.85);
+  }
+}
+
+.door-temp-val {
+  font-size: 0.92rem;
+  font-weight: 900;
+  color: #bae6fd;
+  font-family: monospace, sans-serif;
+  letter-spacing: 0.05em;
+  line-height: 1.1;
+  text-shadow: 0 0 8px rgba(56, 189, 248, 0.6);
+}
+
+.door-temp-label {
+  font-size: 0.54rem;
+  font-weight: 700;
+  color: #7dd3fc;
+  letter-spacing: 0.08em;
+}
+
+/* 3. Jendela Kaca Berembun (Frosted Window) */
+.door-glass-window {
+  position: relative;
+  width: 90%;
+  max-width: 135px;
+  border-radius: 12px;
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.22) 0%, rgba(190, 225, 255, 0.14) 60%, rgba(255, 255, 255, 0.28) 100%);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.2), 0 6px 14px rgba(0, 0, 0, 0.15);
+  padding: 0.65rem 0.4rem;
+  overflow: hidden;
+  backdrop-filter: blur(2px);
+}
+
+.door-glass-glare {
+  position: absolute;
+  inset: -40% -20%;
+  background: linear-gradient(130deg, transparent 40%, rgba(255, 255, 255, 0.35) 48%, transparent 56%);
+  pointer-events: none;
+}
+
+.door-glass-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.door-food-icon {
+  font-size: 1.6rem;
+  line-height: 1.1;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
+}
+
+.door-food-title {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  white-space: nowrap;
+}
+
+.door-food-tag {
+  font-size: 0.56rem;
+  font-weight: 600;
+  color: #ffedd5;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+  white-space: nowrap;
+}
+
+/* 4. Stiker Bawah & Ajakan Aksi */
+.door-tag-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: rgba(255, 255, 255, 0.95);
+  color: #991b1b;
+  padding: 0.3rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.62rem;
+  font-weight: 800;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+  white-space: nowrap;
+}
+
+.door-tag-check {
+  color: #16a34a;
+  font-weight: 900;
+  font-size: 0.75rem;
+}
+
+.door-cta-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: linear-gradient(135deg, #fef08a, #facc15);
+  color: #713f12;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.62rem;
+  font-weight: 800;
+  box-shadow: 0 3px 10px rgba(234, 179, 8, 0.35);
+  white-space: nowrap;
+  animation: ctaBounce 2.2s infinite;
+}
+
+@keyframes ctaBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+/* Efek uap dingin & butiran salju */
 .mist {
   position: absolute;
   inset: auto -10% -30% -10%;
@@ -2231,11 +2487,6 @@ main {
   box-shadow: 0 0 6px rgba(150, 210, 245, 0.9);
   opacity: 0;
   pointer-events: none;
-}
-
-.fridge[data-open="true"] .shelf li {
-  opacity: 1;
-  transform: none;
 }
 
 .fr-foot {
