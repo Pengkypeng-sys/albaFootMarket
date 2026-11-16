@@ -7,28 +7,27 @@ export const contact = {
   name: "Alba Food Market",
   tagline: "Your Everyday Food Supplies. Fresh, Frozen & Healthy Food.",
   /** Format wa.me (tanpa +). */
-  whatsapp: "6289622148082",
-  phone: "0896-2214-8082",
-  phoneIntl: "+62 896-2214-8082",
+  whatsapp: "628170055121",
+  phone: "0817-0055-121",
+  phoneIntl: "+62 817-0055-121",
   instagram: "https://www.instagram.com/albafoodmarket",
   instagramHandle: "@albafoodmarket",
   website: "https://www.albafroz.com/",
   address:
-    "Perumahan Koperasi BUGN, Jalan Pasir Kaliki 4 Blok B4 No. 70 & 72, Kelurahan Pasir Putih, Kecamatan Sawangan, Kota Depok, Jawa Barat 16519",
-  addressShort: "Pasir Kaliki 4 Blok B4 No. 70 & 72, Sawangan, Depok",
+    "Perumahan Koperasi BUGN, Jl. Pasir Kaliki 4 Blok B4 No.70 & 72, Pasir Putih, Sawangan, Depok 16519",
+  addressShort: "Pasir Kaliki 4 Blok B4 No.70 & 72, Sawangan, Depok",
   mapsQuery:
-    "Perumahan Koperasi BUGN, Jalan Pasir Kaliki 4 Blok B4 No. 70 & 72, Pasir Putih, Sawangan, Depok 16519",
+    "Perumahan Koperasi BUGN, Jl. Pasir Kaliki 4 Blok B4 No.70 & 72, Pasir Putih, Sawangan, Depok 16519",
   hours: {
-    /** 1 = Senin … 6 = Sabtu. Minggu (0) tutup / hanya chat WA. */
+    /** 1 = Senin … 6 = Sabtu. Minggu tutup. */
     openDays: [1, 2, 3, 4, 5, 6],
-    openHour: 8,
-    closeHour: 20,
-    label: "Senin–Sabtu · 08.00–20.00 WIB",
-    closedNote: "Minggu buka via chat WhatsApp",
+    openHour: 9,
+    closeHour: 17,
+    label: "Senin–Sabtu · 09.00–17.00 WIB",
+    closedNote: "Minggu tutup",
   },
-  rating: { score: "5.0", count: 7, source: "Google Maps" },
-  services: ["Belanja di tempat", "Pesan antar (Instant/Sameday)", "Pengiriman Paxel Frozen", "Pre-order"],
-  payments: ["Transfer Bank", "QRIS", "Tunai", "Debit"],
+  services: ["Belanja di toko", "Antar", "Pre-order"],
+  payments: ["Tunai", "Kartu debit", "NFC"],
 } as const;
 
 export const partners = [

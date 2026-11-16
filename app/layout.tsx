@@ -15,11 +15,11 @@ export const metadata: Metadata = {
   // TODO: konfirmasi domain produksi
   metadataBase: new URL("https://albafoodmarket.example"),
   title: {
-    default: "Alba Food Market | Kulit Sambosa, Frozen Food & Kurma di Sawangan Depok",
+    default: "Alba Food Market | Kulit Sambosa, Roti Cane, Kurma di Sawangan Depok",
     template: "%s | Alba Food Market",
   },
   description:
-    "Produsen kulit sambosa premium, roti cane beku, camilan, kurma, dan bumbu masak di Sawangan, Depok. Senin–Sabtu 09.00–17.00 WIB.",
+    "Kulit sambosa, sambosa cokelat, roti cane beku, camilan, kurma, dan bumbu masak di Sawangan, Depok. Senin–Sabtu 09.00–17.00 WIB.",
   openGraph: {
     title: "Alba Food Market",
     description: "Fresh, Frozen & Healthy food. Sawangan, Depok.",
@@ -36,7 +36,7 @@ const jsonLd = {
   telephone: contact.phoneIntl,
   address: {
     "@type": "PostalAddress",
-    streetAddress: "Perumahan Koperasi BUGN, Jalan Pasir Kaliki 4 Blok B4 No. 70 & 72, Pasir Putih",
+    streetAddress: "Perumahan Koperasi BUGN, Jl. Pasir Kaliki 4 Blok B4 No.70 & 72, Pasir Putih",
     addressLocality: "Depok",
     addressRegion: "Jawa Barat",
     postalCode: "16519",
@@ -47,11 +47,6 @@ const jsonLd = {
     dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
     opens: "09:00",
     closes: "17:00",
-  },
-  aggregateRating: {
-    "@type": "AggregateRating",
-    ratingValue: contact.rating.score,
-    reviewCount: contact.rating.count,
   },
   paymentAccepted: "Cash, Debit card, NFC mobile payment",
   sameAs: [contact.instagram, contact.website],

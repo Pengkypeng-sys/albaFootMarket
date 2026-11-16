@@ -16,6 +16,7 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
     <article
       ref={ref}
       className="card"
+      data-cat={product.category}
       data-reveal
       style={{ "--d": `${(index % 4) * 70}ms` } as React.CSSProperties}
     >
@@ -28,7 +29,7 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
           width={640}
           height={640}
         />
-        <div style={{ position: "absolute", top: 10, left: 10, display: "flex", gap: "6px", flexWrap: "wrap" }}>
+        <div style={{ position: "absolute", top: 10, left: 10, display: "flex", gap: "6px", flexWrap: "wrap", zIndex: 2 }}>
           {product.brand === "Albafroz" ? (
             <span style={{ background: "#e10600", color: "#fff", fontSize: "0.72rem", fontWeight: 700, padding: "2px 8px", borderRadius: "999px", letterSpacing: "0.02em" }}>
               Albafroz
@@ -46,28 +47,34 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
           ) : null}
         </div>
       </Link>
-      <h3>
-        <Link href={`/produk/${product.slug}`}>{product.name}</Link>
-      </h3>
-      {product.packSize ? (
-        <span style={{ fontSize: "0.8rem", color: "var(--muted)", fontWeight: 500, display: "block", marginTop: "-0.2rem" }}>
-          {product.packSize}
-        </span>
-      ) : null}
-      <p>{product.summary}</p>
-      {product.price ? <strong className="card-price">{formatRp(product.price)}</strong> : null}
+      <div className="card-body">
+        <h3>
+          <Link href={`/produk/${product.slug}`}>{product.name}</Link>
+        </h3>
+        {product.pack || product.packSize ? (
+          <span className="pack">{product.pack || product.packSize}</span>
+        ) : null}
+        <p>{product.summary}</p>
+        <div className="card-price-row">
+          {product.price ? (
+            <strong className="card-price">{formatRp(product.price)}</strong>
+          ) : (
+            <span className="card-ask">Tanya harga</span>
+          )}
+        </div>
+      </div>
       {qty > 0 ? (
         <Stepper qty={qty} onChange={(q) => setQty(product.slug, q)} />
       ) : (
         <button
-          className="btn"
+          className="btn btn-red"
           type="button"
           onClick={() => {
             add(product.slug);
             flyToCart(ref.current?.querySelector("img") ?? null);
           }}
         >
-          + Keranjang
+          Tambah
         </button>
       )}
     </article>

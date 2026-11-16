@@ -1,49 +1,70 @@
 /**
- * Katalog produk — tanpa database.
+ * Katalog produk — tanpa database. Sumber harga: daftar harga Albafroz dari pemilik.
  * Tambah produk: salin satu objek, ganti slug (unik), simpan.
- * `price` kosong = tampil ringkasan + "tanya via WhatsApp". Harga saat ini hanya untuk tes.
+ * `price` kosong = tampil "tanya via WhatsApp".
  * `keywords` dipakai pencarian; tulis kata yang akan diketik pelanggan.
  */
 
-export type CategoryId = "kulit" | "sambosa" | "canai" | "camilan" | "kurma" | "bumbu" | "madu" | "po";
-export type BrandName = "Alba Food Market" | "Albafroz" | "Hey Honey";
+export type CategoryId =
+  | "kulit"
+  | "sambosa"
+  | "kebab"
+  | "canai"
+  | "onde"
+  | "minuman"
+  | "camilan"
+  | "kurma"
+  | "bumbu"
+  | "po";
 
 export type Shot = { src: string; alt: string };
 
 export type Product = {
   slug: string;
   name: string;
-  brand: BrandName;
   category: CategoryId;
+  /** Isi/ukuran per kemasan, mis. "Isi 10". */
+  pack?: string;
+  packSize?: string;
+  brand?: string;
+  wholesalePrice?: number;
+  wholesaleMin?: number;
   summary: string;
   keywords: string;
-  packSize?: string;
-  /** Harga eceran dalam rupiah. TODO: konfirmasi harga resmi pemilik. */
+  /** Harga per kemasan dalam rupiah. */
   price?: number;
-  /** Harga grosir/reseller dalam rupiah */
-  wholesalePrice?: number;
-  /** Minimal pembelian untuk harga grosir */
-  wholesaleMin?: number;
   /** Pre-order (musiman Ramadan). */
   preorder?: boolean;
-  featured: boolean;
-  /** Foto sementara (stok). TODO: ganti dengan foto asli di /public/products. */
+  /** Tampil di beranda dan kulkas (satu per kategori). */
+  featured?: boolean;
   image: string;
   imageAlt: string;
   /** Foto tambahan untuk halaman detail; foto utama selalu pertama. */
   more?: Shot[];
 };
 
-const u = (id: string, w = 1200) =>
-  `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=80`;
+// Foto: Wikimedia Commons, lisensi di public/products/ATRIBUSI.md.
+// TODO: foto kemasan asli per varian (sekarang satu foto per keluarga produk)
+const kulitImg = "/products/kulit-sambosa.jpg";
+const sambosaImg = "/products/sambosa-frozen.jpg";
+const kebabImg = "/products/kebab.jpg";
+const ondeImg = "/products/onde-onde.jpg";
+const canaiImg = "/products/roti-canai.jpg";
+const camilanImg = "/products/camilan.jpg";
+const kurmaImg = "/products/kurma.jpg";
+const bumbuImg = "/products/bumbu-masak.jpg";
+// TODO: foto minuman asli
+const minumanImg = "/products/minuman.svg";
 
 export const categories: { id: CategoryId | "semua"; label: string }[] = [
   { id: "semua", label: "Semua" },
   { id: "kulit", label: "Kulit sambosa" },
-  { id: "sambosa", label: "Sambosa & Pastel" },
-  { id: "canai", label: "Roti cane" },
+  { id: "sambosa", label: "Sambosa" },
+  { id: "kebab", label: "Kebab" },
+  { id: "canai", label: "Roti canai" },
+  { id: "onde", label: "Onde-onde" },
+  { id: "minuman", label: "Minuman" },
   { id: "camilan", label: "Camilan" },
-  { id: "madu", label: "Madu" },
   { id: "kurma", label: "Kurma" },
   { id: "bumbu", label: "Bumbu masak" },
   { id: "po", label: "Pre-order" },
@@ -51,173 +72,247 @@ export const categories: { id: CategoryId | "semua"; label: string }[] = [
 
 export const products: Product[] = [
   {
-    slug: "kulit-sambosa",
-    name: "Kulit Sambosa Premium",
-    brand: "Alba Food Market",
+    slug: "kulit-sambosa-large",
+    name: "Kulit Sambosa Large",
     category: "kulit",
-    summary: "Produksi tangan pertama. Lentur, renyah maksimal, tidak mudah robek saat digulung.",
-    packSize: "Isi 50 Lembar (±500gr)",
-    price: 25000,
-    wholesalePrice: 19500,
-    wholesaleMin: 10,
-    keywords: "kulit sambosa samosa pastry lembaran premium produsen adonan bahan baku",
+    pack: "Isi 50",
+    summary: "Ukuran large.",
+    price: 45000,
+    keywords: "kulit sambosa samosa pastry lembaran large besar",
     featured: true,
-    image: u("photo-1590385014317-6a78bc23b090"),
-    imageAlt: "Adonan kulit sambosa tipis lembaran berkualitas",
-    more: [{ src: u("photo-1582901509343-c217fbb3081c"), alt: "Adonan kulit sambosa siap gulung" }],
+    image: kulitImg,
+    imageAlt: "Kemasan kulit sambosa",
+  },
+  {
+    slug: "kulit-sambosa-medium",
+    name: "Kulit Sambosa Medium",
+    category: "kulit",
+    pack: "Isi 50",
+    summary: "Ukuran medium.",
+    price: 37500,
+    keywords: "kulit sambosa samosa pastry lembaran medium sedang",
+    image: kulitImg,
+    imageAlt: "Kemasan kulit sambosa",
+  },
+  {
+    slug: "kulit-sambosa-small",
+    name: "Kulit Sambosa Small",
+    category: "kulit",
+    pack: "Isi 50 (2 pack @ 25 lembar)",
+    summary: "Ukuran small.",
+    price: 35000,
+    keywords: "kulit sambosa samosa pastry lembaran small kecil",
+    image: kulitImg,
+    imageAlt: "Kemasan kulit sambosa",
   },
   {
     slug: "sambosa-daging",
-    name: "Sambosa Daging Sapi Spesial",
-    brand: "Albafroz",
+    name: "Sambosa Daging",
     category: "sambosa",
-    summary: "Daging cincang sapi melimpah dengan racikan rempah khas gurih harum, kulit renyah berlapis.",
-    packSize: "Isi 10 Pcs",
-    price: 35000,
-    wholesalePrice: 28000,
-    wholesaleMin: 10,
-    keywords: "sambosa daging sapi samosa beef rempah gurih savory beku frozen albafroz",
+    pack: "Isi 10",
+    summary: "Sambosa frozen isi daging.",
+    price: 40000,
+    keywords: "sambosa samosa daging sapi beef frozen beku",
     featured: true,
-    image: u("photo-1772729996007-40bad08b3c40"),
-    imageAlt: "Sambosa segitiga emas goreng renyah isi daging",
-    more: [{ src: u("photo-1767469576715-a4eb8bcfa204"), alt: "Sambosa gurih keemasan" }],
+    image: sambosaImg,
+    imageAlt: "Sambosa frozen dalam kemasan",
   },
   {
-    slug: "sambosa-cokelat",
-    name: "Sambosa Cokelat Keju Lumer",
-    brand: "Albafroz",
+    slug: "sambosa-daging-asap",
+    name: "Sambosa Daging Asap",
     category: "sambosa",
-    summary: "Varian manis favorit anak & keluarga. Isian cokelat premium lumer berpadu gurihnya keju.",
-    packSize: "Isi 10 Pcs",
-    price: 28000,
-    wholesalePrice: 22000,
-    wholesaleMin: 10,
-    keywords: "sambosa cokelat keju chocolate manis samosa frozen beku albafroz lumer dessert",
-    featured: true,
-    image: u("photo-1718897266472-5b7229ebdd3d"),
-    imageAlt: "Pastry sambosa manis lelehan cokelat",
-    more: [{ src: u("photo-1767469576715-a4eb8bcfa204"), alt: "Sambosa goreng keemasan" }],
+    pack: "Isi 10",
+    summary: "Sambosa frozen isi daging asap.",
+    price: 30000,
+    keywords: "sambosa samosa daging asap smoked beef frozen beku",
+    image: sambosaImg,
+    imageAlt: "Sambosa frozen dalam kemasan",
   },
   {
-    slug: "pastel-daging",
-    name: "Pastel Daging Rogout Gurih",
-    brand: "Albafroz",
+    slug: "sambosa-ayam",
+    name: "Sambosa Ayam",
     category: "sambosa",
-    summary: "Pastel frozen dengan isian rogout daging sapi cincang, wortel lembut, dan bumbu rempah spesial.",
-    packSize: "Isi 10 Pcs",
-    price: 32000,
-    wholesalePrice: 26000,
-    wholesaleMin: 10,
-    keywords: "pastel daging rogout frozen pastel beku albafroz goreng gurih cemilan",
-    featured: true,
-    image: u("photo-1767469576715-a4eb8bcfa204"),
-    imageAlt: "Pastel daging goreng garing keemasan",
+    pack: "Isi 10",
+    summary: "Sambosa frozen isi ayam.",
+    price: 40000,
+    keywords: "sambosa samosa ayam chicken frozen beku",
+    image: sambosaImg,
+    imageAlt: "Sambosa frozen dalam kemasan",
   },
   {
-    slug: "roti-cane-beku",
-    name: "Roti Cane / Canai Original",
-    brand: "Albafroz",
+    slug: "sambosa-sayur",
+    name: "Sambosa Sayur",
+    category: "sambosa",
+    pack: "Isi 10",
+    summary: "Sambosa frozen isi sayur.",
+    price: 27500,
+    keywords: "sambosa samosa sayur sayuran vegetarian frozen beku",
+    image: sambosaImg,
+    imageAlt: "Sambosa frozen dalam kemasan",
+  },
+  {
+    slug: "sambosa-coklat",
+    name: "Sambosa Coklat",
+    category: "sambosa",
+    pack: "Isi 10",
+    summary: "Sambosa frozen isi coklat.",
+    price: 30000,
+    keywords: "sambosa samosa coklat cokelat chocolate manis frozen beku",
+    image: sambosaImg,
+    imageAlt: "Sambosa frozen dalam kemasan",
+  },
+  {
+    slug: "sambosa-mozarella",
+    name: "Sambosa Mozarella",
+    category: "sambosa",
+    pack: "Isi 10",
+    summary: "Sambosa frozen isi mozarella.",
+    price: 30000,
+    keywords: "sambosa samosa mozarella mozzarella keju cheese frozen beku",
+    image: sambosaImg,
+    imageAlt: "Sambosa frozen dalam kemasan",
+  },
+  {
+    slug: "kebab-daging",
+    name: "Kebab Daging",
+    category: "kebab",
+    pack: "Isi 6",
+    summary: "Kebab frozen isi daging.",
+    price: 40000,
+    keywords: "kebab daging sapi beef frozen beku",
+    featured: true,
+    image: kebabImg,
+    imageAlt: "Kebab frozen dalam kemasan",
+  },
+  {
+    slug: "kebab-daging-mozarella",
+    name: "Kebab Daging Mozarella",
+    category: "kebab",
+    pack: "Isi 6",
+    summary: "Kebab frozen isi daging dan mozarella.",
+    price: 45000,
+    keywords: "kebab daging mozarella mozzarella keju cheese frozen beku",
+    image: kebabImg,
+    imageAlt: "Kebab frozen dalam kemasan",
+  },
+  {
+    slug: "roti-canai-original",
+    name: "Roti Canai Original",
     category: "canai",
-    summary: "Roti cane khas Timur Tengah bertekstur berserat, empuk di dalam dan renyah lembut di luar.",
-    packSize: "Isi 5 Pcs (Diameter ±16cm)",
+    pack: "Isi 5",
+    summary: "Roti canai beku. Tinggal panaskan.",
+    price: 30000,
+    keywords: "roti canai cane prata paratha original beku frozen sarapan",
+    featured: true,
+    image: canaiImg,
+    imageAlt: "Roti canai",
+  },
+  {
+    slug: "roti-canai-susu",
+    name: "Roti Canai Susu",
+    category: "canai",
+    pack: "Isi 5",
+    summary: "Roti canai beku rasa susu.",
+    price: 32500,
+    keywords: "roti canai cane prata paratha susu milk beku frozen",
+    image: canaiImg,
+    imageAlt: "Roti canai",
+  },
+  {
+    slug: "onde-onde",
+    name: "Onde-onde Frozen",
+    category: "onde",
+    pack: "Isi 10",
+    summary: "Isi kacang hijau.",
     price: 25000,
-    wholesalePrice: 19500,
-    wholesaleMin: 10,
-    keywords: "roti cane canai prata paratha beku frozen original albafroz sarapan",
+    keywords: "onde onde ondeh kacang hijau ijo wijen frozen beku",
     featured: true,
-    image: u("photo-1704742205127-56131b97e344"),
-    imageAlt: "Roti cane canai beku siap dipanggang",
-    more: [{ src: u("photo-1754394483922-4d3a10cc6187"), alt: "Roti cane dimasak di teflon panas" }],
+    image: ondeImg,
+    imageAlt: "Onde-onde frozen dalam kemasan",
   },
   {
-    slug: "roti-cane-cokelat",
-    name: "Roti Cane Cokelat Meses",
-    brand: "Albafroz",
-    category: "canai",
-    summary: "Roti canai dengan filling cokelat manis lezat di antara lapisan serat adonan.",
-    packSize: "Isi 5 Pcs",
-    price: 28000,
-    wholesalePrice: 22000,
-    wholesaleMin: 10,
-    keywords: "roti cane cokelat manis canai frozen albafroz",
-    featured: false,
-    image: u("photo-1754394483922-4d3a10cc6187"),
-    imageAlt: "Roti canai cokelat panggang harum",
+    slug: "teh-rempah-adheni",
+    name: "Teh Rempah Adheni Tea",
+    category: "minuman",
+    pack: "200 ml",
+    summary: "Teh rempah.",
+    price: 15000,
+    keywords: "teh rempah adheni tea minuman botol",
+    image: minumanImg,
+    imageAlt: "Minuman botol",
   },
   {
-    slug: "madu-hey-honey",
-    name: "Madu Murni Hey Honey Multiflora",
-    brand: "Hey Honey",
-    category: "madu",
-    summary: "Madu murni alami tanpa pemanis buatan dari brand saudara Hey Honey. Segar dan kaya enzim alami.",
-    packSize: "Jar Kaca 350gr",
-    price: 65000,
-    wholesalePrice: 52000,
-    wholesaleMin: 6,
-    keywords: "madu hey honey murni raw honey natural alami depok herbal manis",
-    featured: true,
-    image: u("photo-1587049352846-4a222e784d38"),
-    imageAlt: "Madu murni alami dalam toples kaca",
+    slug: "susu-kurma",
+    name: "Susu Kurma",
+    category: "minuman",
+    pack: "200 ml",
+    summary: "Susu rasa kurma.",
+    price: 15000,
+    keywords: "susu kurma milk dates minuman botol",
+    image: minumanImg,
+    imageAlt: "Minuman botol",
+  },
+  {
+    slug: "kopi-susu-aren",
+    name: "Kopi Susu Aren",
+    category: "minuman",
+    pack: "200 ml",
+    summary: "Kopi susu gula aren.",
+    price: 15000,
+    keywords: "kopi susu aren gula coffee minuman botol",
+    image: minumanImg,
+    imageAlt: "Minuman botol",
+  },
+  {
+    slug: "banana-choco-milk",
+    name: "Banana Choco Milk",
+    category: "minuman",
+    pack: "200 ml",
+    summary: "Susu pisang coklat.",
+    price: 15000,
+    keywords: "banana choco milk pisang coklat cokelat susu minuman botol",
+    image: minumanImg,
+    imageAlt: "Minuman botol",
   },
   {
     slug: "aneka-camilan",
-    name: "Aneka Camilan & Keripik Khas",
-    brand: "Alba Food Market",
+    name: "Aneka Camilan",
     category: "camilan",
-    summary: "Pilihan camilan gurih renyah teman santai dan pelengkap meja keluarga.",
-    packSize: "Pack 250gr",
-    price: 15000,
-    wholesalePrice: 12000,
-    wholesaleMin: 10,
-    keywords: "camilan snack cemilan kue kering oleh-oleh gorengan",
-    featured: false,
-    image: u("photo-1773450970933-1e03603d8fba"),
-    imageAlt: "Kotak kemasan aneka camilan renyah",
+    summary: "Camilan gurih untuk teman santai.",
+    keywords: "camilan snack cemilan keripik oleh-oleh",
+    featured: true,
+    image: camilanImg,
+    imageAlt: "Aneka camilan",
   },
   {
     slug: "kurma",
-    name: "Kurma Sukari Al-Qassim",
-    brand: "Alba Food Market",
+    name: "Kurma",
     category: "kurma",
-    summary: "Kurma Sukari basah kualitas super dari Al-Qassim. Lembut, manis alami karamel meleleh di lidah.",
-    packSize: "Ember / Box 500gr",
-    price: 45000,
-    wholesalePrice: 38000,
-    wholesaleMin: 5,
-    keywords: "kurma sukari dates buah ramadan berbuka takjil sahur manis alqassim",
+    summary: "Kurma manis alami. Cocok untuk berbuka.",
+    keywords: "kurma dates buah ramadan berbuka takjil sahur manis",
     featured: true,
-    image: u("photo-1710228010206-934856204165"),
-    imageAlt: "Kurma sukari berkualitas tinggi",
-    more: [{ src: u("photo-1771231591559-d19c89ad118a"), alt: "Tumpukan kurma segar" }],
+    image: kurmaImg,
+    imageAlt: "Kurma",
   },
   {
     slug: "bumbu-masak",
-    name: "Aneka Bumbu Rempah Masak",
-    brand: "Alba Food Market",
+    name: "Aneka Bumbu Masak",
     category: "bumbu",
-    summary: "Racikan bumbu rempah dapur pilihan untuk kari, kebuli, dan olahan daging autentik.",
-    packSize: "Pouch 100gr",
-    price: 15000,
-    wholesalePrice: 11000,
-    wholesaleMin: 10,
-    keywords: "bumbu masak rempah dapur kari spices kebuli briyani",
-    featured: false,
-    image: u("photo-1650559347569-09a6bbed5f28"),
-    imageAlt: "Deretan rempah alami bumbu masak",
-    more: [{ src: u("photo-1707129767056-c4edd11bf87c"), alt: "Rempah dan herba di meja kayu" }],
+    summary: "Bumbu dan rempah untuk masakan harian.",
+    keywords: "bumbu masak rempah dapur kari spices",
+    featured: true,
+    image: bumbuImg,
+    imageAlt: "Aneka bumbu masak",
   },
   {
     slug: "po-ramadan",
-    name: "Pre-order Hampers & Sajian Ramadan",
-    brand: "Alba Food Market",
+    name: "Pre-order Ramadan",
     category: "po",
-    summary: "Paket lengkap takjil, sambosa siap goreng, roti cane, kurma sukari & madu murni untuk iftar keluarga tercinta.",
-    packSize: "Paket Box Eksklusif",
-    keywords: "po pre order preorder ramadan puasa iftar berbuka takjil sajian keluarga hampers",
+    summary: "Pesan lebih awal untuk Ramadan.",
+    keywords: "po pre order preorder ramadan puasa iftar berbuka takjil",
     preorder: true,
-    featured: true,
-    image: u("photo-1772729996007-40bad08b3c40"),
-    imageAlt: "Paket hidangan berbuka puasa Ramadan",
+    image: kurmaImg,
+    imageAlt: "Kurma untuk Ramadan",
   },
 ];
 
@@ -229,7 +324,7 @@ export function shotsOf(p: Product): Shot[] {
   return [{ src: p.image, alt: p.imageAlt }, ...(p.more ?? [])];
 }
 
-/** Unsplash: ganti lebar gambar (foto asli nanti: samakan dengan loader/CDN). */
+/** Ganti lebar gambar Unsplash. Foto lokal (/products/…) dikembalikan apa adanya. */
 export const thumb = (src: string, w: number) => src.replace("w=1200", `w=${w}`);
 
 /** Cocokkan semua kata ketikan dengan nama, ringkasan, atau keywords. */
@@ -237,7 +332,7 @@ export function searchProducts(q: string, list: Product[] = products) {
   const words = q.toLowerCase().split(/\s+/).filter(Boolean);
   if (words.length === 0) return list;
   return list.filter((p) => {
-    const hay = `${p.name} ${p.summary} ${p.keywords}`.toLowerCase();
+    const hay = `${p.name} ${p.pack ?? ""} ${p.summary} ${p.keywords}`.toLowerCase();
     return words.every((w) => hay.includes(w));
   });
 }
@@ -249,3 +344,5 @@ export function formatRp(n: number) {
     maximumFractionDigits: 0,
   }).format(n);
 }
+
+export const featured = products.filter((p) => p.featured);

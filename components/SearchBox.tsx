@@ -8,7 +8,7 @@ import { searchProducts, thumb } from "@/data/products";
 export function SearchBox({
   large = false,
   initial = "",
-  placeholder = "Cari produk: kulit sambosa, kurma, bumbu…",
+  placeholder = "Cari: sambosa, kebab, roti canai…",
 }: {
   large?: boolean;
   initial?: string;

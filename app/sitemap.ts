@@ -5,7 +5,7 @@ import { products } from "@/data/products";
 const base = "https://albafoodmarket.example";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const routes = ["", "/produk", "/albafroz", "/reseller", "/tentang", "/lokasi", "/faq"];
+  const routes = ["", "/produk", "/lokasi"];
   return [
     ...routes.map((p) => ({ url: `${base}${p}` })),
     ...products.map((p) => ({ url: `${base}/produk/${p.slug}` })),

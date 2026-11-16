@@ -8,7 +8,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { products, type Product } from "@/data/products";
+import { formatRp, products, type Product } from "@/data/products";
 
 export type CartLine = {
   slug: string;
@@ -101,4 +101,51 @@ export function useCart() {
 
 export function lineProduct(line: CartLine): Product | undefined {
   return products.find((p) => p.slug === line.slug);
+}
+
+/** Subtotal satu baris; undefined jika produk belum punya harga. */
+export function lineTotal(line: CartLine): number | undefined {
+  const price = lineProduct(line)?.price;
+  return price ? price * line.qty : undefined;
+}
+
+/** Total keranjang + jumlah baris yang harganya belum ada (ditanyakan via WhatsApp). */
+export function cartTotal(lines: CartLine[]): { sum: number; unpriced: number } {
+  let sum = 0;
+  let unpriced = 0;
+  for (const l of lines) {
+    const t = lineTotal(l);
+    if (t === undefined) unpriced++;
+    else sum += t;
+  }
+  return { sum, unpriced };
+}
+
+export type OrderForm = { name: string; mode: "antar" | "ambil"; address: string; note: string };
+
+/** Teks pesanan untuk WhatsApp: tiap baris lengkap dengan harga satuan, subtotal, dan total. */
+export function orderMessage(lines: CartLine[], form: OrderForm): string {
+  const rows = lines.flatMap((line, i) => {
+    const p = lineProduct(line);
+    if (!p) return [];
+    const unit = p.price ? ` ${formatRp(p.price)}` : "";
+    const sub = lineTotal(line);
+    return [
+      `${i + 1}. ${p.name}${p.pack ? ` (${p.pack})` : ""}${p.preorder ? " [pre-order]" : ""}`,
+      `   ${line.qty} x${unit} = ${sub === undefined ? "harga dikonfirmasi" : formatRp(sub)}`,
+    ];
+  });
+  const { sum, unpriced } = cartTotal(lines);
+  return [
+    "Halo Alba Food Market, saya mau pesan:",
+    "",
+    ...rows,
+    "",
+    `Total: ${formatRp(sum)}${unpriced ? ` (+ ${unpriced} item harga dikonfirmasi)` : ""}`,
+    "",
+    `Nama: ${form.name || "-"}`,
+    `Ambil/antar: ${form.mode === "ambil" ? "Ambil di toko" : "Antar"}`,
+    ...(form.mode === "antar" ? [`Alamat: ${form.address || "-"}`] : []),
+    `Catatan: ${form.note || "-"}`,
+  ].join("\n");
 }

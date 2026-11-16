@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { products, thumb } from "@/data/products";
-import { contact } from "@/lib/brand";
+import { featured, thumb } from "@/data/products";
 
 const flakes = Array.from({ length: 9 }, (_, i) => i);
 const sides = ["l", "r"] as const;
@@ -37,8 +36,8 @@ export function Fridge() {
         <div className="fr-unit">
           <div className="fr-cab">
             <ul className="shelf">
-              {products.map((p, i) => (
-                <li key={p.slug} style={{ "--i": i } as React.CSSProperties}>
+              {featured.map((p, i) => (
+                <li key={p.slug} data-cat={p.category} style={{ "--i": i } as React.CSSProperties}>
                   <Link href={`/produk/${p.slug}`} tabIndex={open ? 0 : -1}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={thumb(p.image, 240)} alt="" width={96} height={96} />
@@ -46,12 +45,6 @@ export function Fridge() {
                   </Link>
                 </li>
               ))}
-              <li style={{ "--i": products.length } as React.CSSProperties}>
-                <Link href="/produk" tabIndex={open ? 0 : -1}>
-                  <b className="all">→</b>
-                  <span>Semua produk</span>
-                </Link>
-              </li>
             </ul>
             <div className="mist" aria-hidden />
             {flakes.map((i) => (
@@ -84,12 +77,15 @@ export function Fridge() {
         </div>
       </div>
       <div className="fr-foot">
-        <button className="link-btn" type="button" aria-expanded={open} onClick={toggle}>
-          {open ? "Tutup kulkas" : "Buka kulkas"}
+        <button
+          className="fr-pill-btn"
+          type="button"
+          aria-expanded={open}
+          onClick={toggle}
+        >
+          <span className="fr-pill-icon">{open ? "❄️" : "✨"}</span>
+          <span>{open ? "Tutup Showcase Pendingin" : "Buka Showcase Pendingin"}</span>
         </button>
-        <span>
-          ★ {contact.rating.score} · {contact.rating.count} ulasan {contact.rating.source}
-        </span>
       </div>
     </div>
   );
