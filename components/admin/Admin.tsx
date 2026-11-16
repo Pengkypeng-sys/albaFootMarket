@@ -288,10 +288,30 @@ function Kasir({
             );
           })}
         </ul>
+
+        {/* Tombol Cepat Melayang Bayar di Layar HP */}
+        {totalItemsCount > 0 && (
+          <div className="adm-pos-mobile-bar">
+            <div className="adm-pos-mobile-info">
+              <span className="adm-pos-mobile-badge">{totalItemsCount} item</span>
+              <strong className="adm-pos-mobile-total">{formatRp(total)}</strong>
+            </div>
+            <button
+              type="button"
+              className="btn btn-red adm-pos-mobile-jump"
+              onClick={() => {
+                const el = document.getElementById("adm-pay-section");
+                if (el) el.scrollIntoView({ behavior: "smooth" });
+              }}
+            >
+              Bayar Sekarang ↓
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Sisi Ringkasan Transaksi Pembeli */}
-      <aside className="adm-pay">
+      <aside className="adm-pay" id="adm-pay-section">
         <h2>Detail Transaksi</h2>
         <label className="field">
           Nama pembeli <small>(opsional)</small>
