@@ -211,30 +211,176 @@ h2 {
 }
 
 /* ---------- pencarian ---------- */
+.search-wrapper {
+  position: relative;
+  width: 100%;
+}
+
 .search {
   position: relative;
+  width: 100%;
 }
 
 .search form {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  height: 46px;
-  padding-inline: 1rem;
+  gap: 0.5rem;
+  height: 48px;
+  padding-left: 0.45rem;
+  padding-right: 0.85rem;
   border: 1.5px solid var(--line);
   border-radius: 999px;
   background: #fff;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
 }
 
 .search form:focus-within {
-  border-color: var(--ink);
-  box-shadow: 0 0 0 4px rgba(20, 20, 20, 0.06);
+  border-color: var(--red);
+  box-shadow: 0 0 0 4px rgba(217, 7, 0, 0.1);
 }
 
-.search svg {
-  flex: none;
+/* Filter Kategori Terintegrasi */
+.search-filter-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.search-filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: 36px;
+  padding: 0 0.75rem;
+  border: none;
+  background: #fdf5eb;
+  color: #8b3c0c;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+  user-select: none;
+}
+
+.search-filter-btn:hover {
+  background: #fbebd9;
+  color: #6d2d07;
+}
+
+.search-filter-btn svg {
+  color: #a45318;
+  transition: transform 0.2s ease;
+}
+
+.search-filter-btn[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+
+.search-filter-icon {
+  font-size: 0.95em;
+  line-height: 1;
+}
+
+.search-filter-text {
+  max-width: 95px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.search-divider {
+  display: inline-block;
+  width: 1px;
+  height: 22px;
+  background: #e7dfd5;
+  margin-left: 0.45rem;
+  margin-right: 0.2rem;
+  flex-shrink: 0;
+}
+
+.search-filter-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  z-index: 60;
+  min-width: 200px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.14), 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 0.5rem;
+  animation: searchPop 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes searchPop {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.search-filter-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   color: var(--muted);
+  padding: 0.35rem 0.65rem 0.3rem;
+}
+
+.search-filter-options {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 250px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.search-filter-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.5rem 0.7rem;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+.search-filter-option:hover {
+  background: var(--soft);
+  color: var(--red);
+}
+
+.search-filter-option[data-active="true"] {
+  background: rgba(217, 7, 0, 0.08);
+  color: var(--red);
+  font-weight: 700;
+}
+
+.search-check {
+  color: var(--red);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.search-icon {
+  flex: none;
+  color: #9a9a9a;
 }
 
 .search input {
@@ -246,21 +392,118 @@ h2 {
   background: transparent;
   color: var(--ink);
   font: inherit;
+  font-size: 0.94rem;
+  padding-inline: 0.1rem;
 }
 
 .search input::placeholder {
-  color: #8a8a8a;
+  color: #8f8f8f;
 }
 
+.search-clear-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: none;
+  background: #ede9e3;
+  color: #666;
+  font-size: 0.7rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+.search-clear-btn:hover {
+  background: #ded9d1;
+  color: #111;
+}
+
+/* Versi search large (Hero) */
 .search-lg form {
-  height: 52px;
-  padding-inline: 1.2rem;
+  height: 54px;
+  padding-left: 0.55rem;
+  padding-right: 1.1rem;
   border-color: #e9cfa6;
-  box-shadow: 0 8px 20px -14px rgba(92, 60, 20, 0.35);
+  box-shadow: 0 8px 24px -12px rgba(92, 60, 20, 0.28);
+}
+
+.search-lg .search-filter-btn {
+  height: 40px;
+  padding: 0 0.95rem;
+  font-size: 0.88rem;
+}
+
+.search-lg .search-filter-text {
+  max-width: 140px;
 }
 
 .search-lg input {
   font-size: 1rem;
+}
+
+/* Quick chips di bawah search hero */
+.search-quick-chips {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  padding-inline: 0.3rem;
+}
+
+.search-quick-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+
+.search-chips-scroll {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  padding-block: 2px;
+}
+
+.search-chips-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.search-quick-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  border: 1.5px solid rgba(220, 200, 180, 0.6);
+  background: rgba(255, 255, 255, 0.85);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  backdrop-filter: blur(4px);
+}
+
+.search-quick-chip:hover {
+  border-color: var(--red);
+  color: var(--red);
+  background: #fff;
+}
+
+.search-quick-chip[data-active="true"] {
+  background: var(--red);
+  border-color: var(--red);
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(217, 7, 0, 0.28);
 }
 
 .suggest {
@@ -303,6 +546,21 @@ h2 {
 .suggest p {
   padding: 0.8rem;
   color: var(--muted);
+}
+
+.suggest-empty {
+  padding: 0.9rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.suggest-empty a {
+  color: var(--red);
+  text-decoration: underline;
+  font-weight: 600;
+  display: inline;
+  padding: 0;
 }
 
 /* ---------- hero ---------- */
@@ -1985,7 +2243,7 @@ main {
   justify-content: center;
   align-items: center;
   margin-top: 1.5rem;
-  transition: opacity 0.8s ease 1s;
+  transition: opacity 0.25s ease;
 }
 
 .fridge:not([data-zoom="true"]) .fr-foot {
