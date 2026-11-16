@@ -8,8 +8,8 @@ export const metadata: Metadata = {
 
 export default function LoginPage() {
   return (
-    <section className="wrap section">
+    <div className="adm-page-wrap">
       <LoginPageClient />
-    </section>
+    </div>
   );
 }

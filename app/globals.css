@@ -3654,8 +3654,8 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 52vh;
-  padding: 1.5rem 0;
+  min-height: 75vh;
+  padding: 2rem 0;
 }
 
 .adm-login-card {
@@ -3762,13 +3762,28 @@ main {
 }
 
 /* =========================================
-   ADMIN DASHBOARD SIDEBAR LAYOUT
+   ADMIN DASHBOARD STANDALONE & SIDEBAR LAYOUT
    ========================================= */
+.adm-standalone-root {
+  min-height: 100vh;
+  background: var(--bg, #faf8f5);
+  display: flex;
+  flex-direction: column;
+}
+
+.adm-page-wrap {
+  width: 100%;
+  max-width: 1680px;
+  margin: 0 auto;
+  padding: 1.25rem clamp(1rem, 2.5vw, 2rem);
+  flex: 1;
+}
+
 .adm-layout {
   display: flex;
   gap: 1.5rem;
   align-items: flex-start;
-  min-height: calc(100vh - 120px);
+  min-height: calc(100vh - 2.5rem);
   position: relative;
 }
 
@@ -3777,7 +3792,7 @@ main {
   width: 280px;
   flex-shrink: 0;
   position: sticky;
-  top: 5rem;
+  top: 1.25rem;
   background: #ffffff;
   border: 1.5px solid var(--line);
   border-radius: 20px;
@@ -3786,7 +3801,7 @@ main {
   flex-direction: column;
   gap: 1.25rem;
   box-shadow: 0 4px 20px -6px rgba(0, 0, 0, 0.05);
-  max-height: calc(100vh - 6rem);
+  max-height: calc(100vh - 2.5rem);
   overflow-y: auto;
   z-index: 90;
 }

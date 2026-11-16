@@ -41,6 +41,16 @@ export function Shell({ children }: { children: React.ReactNode }) {
   const [cart, setCart] = useState(false);
   const wa = waLink("Halo Alba Food Market, saya mau pesan.");
 
+  const isDashboard =
+    path === "/admin" ||
+    path.startsWith("/admin/") ||
+    path === "/login" ||
+    path.startsWith("/login/");
+
+  if (isDashboard) {
+    return <main className="adm-standalone-root">{children}</main>;
+  }
+
   return (
     <>
       <header className="nav">
