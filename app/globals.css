@@ -8,7 +8,7 @@
   --red-dark: #b00600;
   --ok: #16803c;
   --radius: 16px;
-  --wrap: 1120px;
+  --wrap: 1200px;
 }
 
 /* nada hangat per kategori: latar foto kartu dan ubin */
@@ -291,76 +291,6 @@ h2 {
 
 .search-lg input {
   font-size: 16px; /* Tetap 16px untuk mobile safety */
-}
-
-/* ---------- filter kategori di hero (terpisah, rapi, tidak ketiban jam buka) ---------- */
-.hero-filters {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  margin-top: 0.85rem;
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
-.hero-filters-label {
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  flex-shrink: 0;
-}
-
-.hero-filters-list {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  overflow-x: auto;
-  max-width: 100%;
-  padding-block: 2px;
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
-}
-
-.hero-filters-list::-webkit-scrollbar {
-  display: none;
-}
-
-.hero-filter-pill {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.35rem 0.85rem;
-  border-radius: 999px;
-  border: 1.5px solid var(--line);
-  background: #fff;
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--ink);
-  white-space: nowrap;
-  text-decoration: none;
-  transition: all 0.15s ease;
-  flex-shrink: 0;
-}
-
-.hero-filter-pill:hover {
-  border-color: var(--red);
-  color: var(--red);
-  background: #fff;
-}
-
-.hero-filter-active {
-  background: var(--red);
-  border-color: var(--red);
-  color: #fff;
-  font-weight: 700;
-  box-shadow: 0 2px 8px rgba(217, 7, 0, 0.28);
-}
-
-.hero-filter-active:hover {
-  background: var(--red-dark);
-  border-color: var(--red-dark);
-  color: #fff;
 }
 
 /* Auto-suggest dropdown */

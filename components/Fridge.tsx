@@ -8,7 +8,7 @@ const flakes = Array.from({ length: 9 }, (_, i) => i);
 
 export function Fridge() {
   const [zoom] = useState(true);
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const toggle = () => setOpen((o) => !o);
 
   return (
