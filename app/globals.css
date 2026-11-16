@@ -2054,6 +2054,225 @@ main {
   opacity: 0;
 }
 
+/* ---------- SHOWCASE SPOTLIGHT SATU PER SATU (SWIPEABLE SLIDER) ---------- */
+.fr-cab-slider {
+  position: relative;
+  overflow: hidden;
+  padding: 1.1rem 0.8rem 0.9rem;
+  min-height: 310px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+}
+
+.fr-spotlight-wrap {
+  position: relative;
+  width: 100%;
+  height: 255px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fr-spotlight-card {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.92) translateX(30px);
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.fr-spotlight-card[data-active="true"] {
+  opacity: 1;
+  transform: scale(1) translateX(0);
+  pointer-events: auto;
+  z-index: 3;
+}
+
+.fr-spotlight-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: var(--ink);
+  transition: transform 0.25s ease;
+  max-width: 220px;
+  width: 100%;
+}
+
+.fr-spotlight-link:hover {
+  transform: translateY(-2px);
+}
+
+.fr-spotlight-img-wrap {
+  position: relative;
+  width: 155px;
+  height: 155px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow:
+    0 12px 28px -6px rgba(0, 0, 0, 0.35),
+    0 4px 10px rgba(0, 0, 0, 0.15),
+    inset 0 0 0 1.5px rgba(255, 255, 255, 0.8);
+}
+
+.fr-spotlight-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.fr-spotlight-link:hover .fr-spotlight-img {
+  transform: scale(1.06);
+}
+
+.fr-spotlight-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: var(--red);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 999px;
+  letter-spacing: 0.02em;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+.fr-spotlight-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.25rem;
+  margin-top: 0.65rem;
+  width: 100%;
+}
+
+.fr-spotlight-name {
+  font-size: 0.98rem;
+  font-weight: 800;
+  color: #1a202c;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.fr-spotlight-price {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: var(--red);
+}
+
+.fr-spotlight-ask {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #a45318;
+}
+
+.fr-spotlight-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #fff;
+  background: var(--red);
+  padding: 3px 12px;
+  border-radius: 999px;
+  box-shadow: 0 3px 8px rgba(217, 7, 0, 0.3);
+  transition: all 0.2s ease;
+  margin-top: 2px;
+}
+
+.fr-spotlight-link:hover .fr-spotlight-cta {
+  background: #b50500;
+  transform: scale(1.04);
+}
+
+/* Tombol Navigasi Panah Geser Kiri / Kanan */
+.fr-slide-nav {
+  position: absolute;
+  top: 45%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.88);
+  color: #1e293b;
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(4px);
+  transition: all 0.2s ease;
+}
+
+.fr-slide-nav:hover {
+  background: var(--red);
+  color: #fff;
+  border-color: var(--red);
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 6px 16px rgba(217, 7, 0, 0.35);
+}
+
+.fr-slide-prev {
+  left: 8px;
+}
+
+.fr-slide-next {
+  right: 8px;
+}
+
+/* Indikator Titik (Dots) */
+.fr-spotlight-dots {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 0.35rem;
+}
+
+.fr-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(30, 41, 59, 0.25);
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.25s ease;
+}
+
+.fr-dot:hover {
+  background: rgba(30, 41, 59, 0.5);
+}
+
+.fr-dot[data-active="true"] {
+  width: 20px;
+  background: var(--red);
+  box-shadow: 0 2px 5px rgba(217, 7, 0, 0.35);
+}
+
 /* Rak produk kulkas */
 .shelf {
   display: grid;
