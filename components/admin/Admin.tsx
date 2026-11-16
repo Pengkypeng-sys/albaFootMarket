@@ -6,12 +6,14 @@ import { categories, formatRp, products, thumb } from "@/data/products";
 import { dayKey, LOW_STOCK, saleTotal, useAdminAuth, useSales, type Sale, type SaleItem, type Stock } from "@/lib/sales";
 import { AdminLogin } from "./AdminLogin";
 import { DashboardOverview } from "./DashboardOverview";
+import { ProductManager } from "./ProductManager";
 import { formatWaktu, Receipt } from "./Receipt";
 
-type Tab = "overview" | "kasir" | "terjual" | "stok" | "settings";
+type Tab = "overview" | "products" | "kasir" | "terjual" | "stok" | "settings";
 
 const tabs: { id: Tab; label: string; icon: string }[] = [
   { id: "overview", label: "Ringkasan", icon: "📊" },
+  { id: "products", label: "Kelola Produk & Foto", icon: "📸" },
   { id: "kasir", label: "Kasir POS", icon: "🛒" },
   { id: "terjual", label: "Laporan Penjualan", icon: "🧾" },
   { id: "stok", label: "Kelola Stok", icon: "📦" },
@@ -84,9 +86,11 @@ export function Admin() {
           sales={sales}
           stock={stock}
           onOpenReceipt={setShown}
-          onSwitchTab={(target) => setTab(target)}
+          onSwitchTab={(target) => setTab(target as Tab)}
         />
       ) : null}
+
+      {tab === "products" ? <ProductManager /> : null}
 
       {tab === "kasir" ? (
         <Kasir

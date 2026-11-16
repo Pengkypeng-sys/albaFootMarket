@@ -16,7 +16,7 @@ export function DashboardOverview({
   sales: Sale[];
   stock: Stock;
   onOpenReceipt: (sale: Sale) => void;
-  onSwitchTab: (tab: "kasir" | "terjual" | "stok") => void;
+  onSwitchTab: (tab: "products" | "kasir" | "terjual" | "stok") => void;
 }) {
   // 1. Perhitungan Omzet & Metrik Utama
   const totalRevenue = useMemo(() => sales.reduce((sum, s) => sum + s.total, 0), [sales]);
@@ -384,6 +384,18 @@ export function DashboardOverview({
 
       {/* 5. Aksi Cepat Dashboard */}
       <div className="dash-quick-actions">
+        <button
+          type="button"
+          className="dash-action-btn"
+          onClick={() => onSwitchTab("products")}
+        >
+          <span className="dash-action-icon">📸</span>
+          <div>
+            <strong>Kelola Foto &amp; Produk</strong>
+            <small>Ganti foto produk, edit varian rasa &amp; tambah menu baru</small>
+          </div>
+        </button>
+
         <button
           type="button"
           className="dash-action-btn"
