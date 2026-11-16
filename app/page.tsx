@@ -18,11 +18,11 @@ export default function Home() {
   return (
     <>
       <section className="wrap hero">
-        <div>
+        <div className="hero-left">
           <h1 className="rise" style={rise(0)}>
             Cari apa <span>hari ini?</span>
           </h1>
-          <div className="rise" style={rise(1)}>
+          <div className="rise hero-search-wrap" style={rise(1)}>
             <SearchBox large />
           </div>
           <div className="meta rise" style={rise(2)}>
