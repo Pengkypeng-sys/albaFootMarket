@@ -2240,15 +2240,15 @@ main {
   left: 10px;
 }
 
-/* Panel konten di permukaan pintu: Khusus Gambar Produk Tanpa Teks */
-.door-panel-photos {
+/* Panel konten di permukaan pintu: Khusus Icon Menarik Tanpa Teks */
+.door-panel-icons {
   position: relative;
   z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1.1rem;
+  gap: 1.35rem;
   height: 100%;
   padding: 1.2rem 0.6rem;
   box-sizing: border-box;
@@ -2256,35 +2256,52 @@ main {
   user-select: none;
 }
 
-/* Kartu Stiker Foto Produk pada Pintu (Gambar saja, tidak ada teks) */
-.door-photo-card {
+/* Lencana Icon Bulat Elegan (Gold & Glass Medallion) */
+.door-icon-badge {
   position: relative;
-  width: 108px;
-  height: 108px;
-  border-radius: 20px;
+  width: 82px;
+  height: 82px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 35% 30%, #ffffff 0%, #fff7ed 65%, #fed7aa 100%);
+  border: 2.5px solid rgba(255, 235, 180, 0.95);
+  box-shadow:
+    0 10px 22px -3px rgba(0, 0, 0, 0.45),
+    0 4px 8px rgba(0, 0, 0, 0.25),
+    inset 0 2px 4px rgba(255, 255, 255, 0.9),
+    inset 0 -2px 4px rgba(180, 83, 9, 0.2);
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease;
   overflow: hidden;
-  border: 3px solid rgba(255, 255, 255, 0.9);
-  box-shadow: 0 10px 22px -4px rgba(0, 0, 0, 0.45), inset 0 2px 4px rgba(255, 255, 255, 0.6);
-  background: #fff;
+}
+
+.door:hover .door-icon-badge {
+  transform: scale(1.08);
+  box-shadow:
+    0 14px 28px -3px rgba(0, 0, 0, 0.5),
+    0 0 16px rgba(255, 235, 180, 0.45);
+}
+
+.door-icon-badge svg {
+  display: block;
+  filter: drop-shadow(0 2px 4px rgba(120, 53, 15, 0.2));
   transition: transform 0.25s ease;
 }
 
-.door:hover .door-photo-card {
-  transform: scale(1.03);
+.door:hover .door-icon-badge svg {
+  transform: scale(1.05);
 }
 
-.door-photo-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-/* Efek kilauan kaca di atas foto produk */
-.door-photo-glare {
+/* Efek kilauan kaca di atas lencana icon */
+.door-icon-glare {
   position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 45%, transparent 60%);
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.05) 100%);
+  border-radius: 50% 50% 100% 100% / 50% 50% 20% 20%;
   pointer-events: none;
 }
 
@@ -2472,16 +2489,19 @@ main {
     padding: 0.9rem 0.6rem 0.4rem;
   }
 
-  .door-panel-photos {
-    gap: 0.75rem;
+  .door-panel-icons {
+    gap: 0.9rem;
     padding: 0.8rem 0.35rem;
   }
 
-  .door-photo-card {
-    width: 82px;
-    height: 82px;
-    border-radius: 15px;
-    border-width: 2.5px;
+  .door-icon-badge {
+    width: 68px;
+    height: 68px;
+  }
+
+  .door-icon-badge svg {
+    width: 38px;
+    height: 38px;
   }
 
   .shelf {
