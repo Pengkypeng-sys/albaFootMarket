@@ -8,23 +8,9 @@ const flakes = Array.from({ length: 9 }, (_, i) => i);
 const sides = ["l", "r"] as const;
 
 export function Fridge() {
-  const [zoom, setZoom] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [zoom] = useState(true);
+  const [open, setOpen] = useState(true);
   const toggle = () => setOpen((o) => !o);
-
-  useEffect(() => {
-    if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setZoom(true);
-      setOpen(true);
-      return;
-    }
-    const a = setTimeout(() => setZoom(true), 700);
-    const b = setTimeout(() => setOpen(true), 2700);
-    return () => {
-      clearTimeout(a);
-      clearTimeout(b);
-    };
-  }, []);
 
   return (
     <div className="fridge" data-zoom={zoom} data-open={open}>

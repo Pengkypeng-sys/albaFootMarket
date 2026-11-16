@@ -1718,12 +1718,13 @@ main {
   box-shadow: 0 28px 44px -30px rgba(0, 0, 0, 0.5), inset 0 3px 0 rgba(255, 255, 255, 0.35),
     inset 0 -4px 0 rgba(0, 0, 0, 0.18), inset 0 0 0 2px rgba(255, 255, 255, 0.12);
   transform-origin: 50% 60%;
-  transform: translateY(14%) scale(0.5) rotateX(16deg);
-  opacity: 0;
+  transform: none;
+  opacity: 1;
 }
 
 .fridge[data-zoom="true"] .fr-body {
-  animation: dolly 2.2s cubic-bezier(0.22, 0.8, 0.25, 1) both;
+  transform: none;
+  opacity: 1;
 }
 
 .fr-body::before,
@@ -1923,9 +1924,21 @@ main {
   left: 12px;
 }
 
+.door {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  border: 0;
+  background: linear-gradient(180deg, #d90700 0%, #b00600 100%);
+  cursor: pointer;
+  z-index: 4;
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s 0.35s;
+}
+
 .fridge[data-open="true"] .door {
   visibility: hidden;
-  transition: transform 1.7s cubic-bezier(0.65, 0, 0.2, 1), visibility 0s 1.7s;
+  pointer-events: none;
 }
 
 .fridge[data-open="true"] .door[data-side="l"] {
@@ -1946,7 +1959,7 @@ main {
 }
 
 .fridge[data-open="true"] .mist {
-  animation: mist 2.6s ease-out 0.7s both;
+  opacity: 0.7;
 }
 
 .flake {
@@ -1962,12 +1975,9 @@ main {
   pointer-events: none;
 }
 
-.fridge[data-open="true"] .flake {
-  animation: snow 3.2s ease-in calc(0.9s + var(--k) * 0.28s) both;
-}
-
 .fridge[data-open="true"] .shelf li {
-  animation: drop 0.7s cubic-bezier(0.3, 1.4, 0.5, 1) calc(0.8s + var(--i) * 0.09s) backwards;
+  opacity: 1;
+  transform: none;
 }
 
 .fr-foot {
