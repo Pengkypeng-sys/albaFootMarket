@@ -35,6 +35,12 @@ export function Admin() {
   if (!auth.isAuth) return <AdminLogin />;
 
   const currentTab = tabs.find((t) => t.id === tab) || tabs[0];
+  const todayDateStr = new Date().toLocaleDateString("id-ID", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
 
   return (
     <div className="adm-layout">
@@ -46,7 +52,7 @@ export function Admin() {
             <h2 className="adm-brand-title">Alba Market</h2>
             <div className="adm-user-info">
               <span className="adm-user-dot" />
-              <span>Portal Pemilik · Online</span>
+              <span>Portal Pemilik Toko</span>
             </div>
           </div>
           <button
@@ -60,7 +66,7 @@ export function Admin() {
         </div>
 
         <nav className="adm-sidebar-nav">
-          <div className="adm-sidebar-section-title">MENU UTAMA</div>
+          <div className="adm-sidebar-section-title">NAVIGASI UTAMA</div>
           {tabs.map((t) => (
             <button
               key={t.id}
@@ -74,13 +80,17 @@ export function Admin() {
               <span className="adm-side-icon">{t.icon}</span>
               <span className="adm-side-label">{t.label}</span>
               {t.id === "kasir" && <span className="adm-side-badge">POS</span>}
-              {t.id === "products" && <span className="adm-side-badge">Foto</span>}
+              {t.id === "products" && <span className="adm-side-badge">Foto &amp; Data</span>}
+              <span className="adm-side-arrow" aria-hidden>›</span>
             </button>
           ))}
         </nav>
 
         <div className="adm-sidebar-footer">
-          <Link href="/" target="_blank" className="adm-side-foot-link" title="Buka website toko">
+          <div className="adm-sidebar-store-info">
+            <span className="adm-store-version">v2.5 · Sawangan, Depok</span>
+          </div>
+          <Link href="/" target="_blank" className="adm-side-foot-link" title="Buka website toko dalam tab baru">
             <span>↗</span>
             <span>Buka Website Toko</span>
           </Link>
@@ -118,16 +128,25 @@ export function Admin() {
               ☰ <span>Menu</span>
             </button>
             <div>
-              <div className="adm-header-crumb">Dashboard Pemilik Toko</div>
+              <div className="adm-header-crumb">
+                <span>Alba Market</span>
+                <span className="adm-crumb-sep">/</span>
+                <span>{currentTab.label}</span>
+              </div>
               <h1 className="adm-header-title">
-                {currentTab.icon} {currentTab.label}
+                <span className="adm-header-icon">{currentTab.icon}</span>
+                <span>{currentTab.label}</span>
               </h1>
             </div>
           </div>
           <div className="adm-header-right">
+            <div className="adm-header-date">
+              <span>📅</span>
+              <span>{todayDateStr}</span>
+            </div>
             <div className="adm-status-chip">
               <span className="adm-user-dot" />
-              <span>Pemilik Toko</span>
+              <span>Pemilik Online</span>
             </div>
           </div>
         </header>

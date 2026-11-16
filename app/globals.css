@@ -3795,7 +3795,7 @@ main {
   top: 1.25rem;
   background: #ffffff;
   border: 1.5px solid var(--line);
-  border-radius: 20px;
+  border-radius: 22px;
   padding: 1.25rem 1rem;
   display: flex;
   flex-direction: column;
@@ -3824,16 +3824,17 @@ main {
 }
 
 .adm-brand-avatar {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  background: #ffe9e6;
-  border: 1px solid #ffd4cc;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #fff1f0 0%, #ffe0dc 100%);
+  border: 1.5px solid #ffccc5;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.35rem;
+  font-size: 1.4rem;
   flex-shrink: 0;
+  box-shadow: 0 2px 8px -2px rgba(217, 7, 0, 0.15);
 }
 
 .adm-brand-meta {
@@ -3865,8 +3866,9 @@ main {
   height: 8px;
   border-radius: 50%;
   background: #22c55e;
-  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.25);
   flex-shrink: 0;
+  animation: pulse 2.5s infinite ease-in-out;
 }
 
 .adm-sidebar-close {
@@ -3907,28 +3909,30 @@ main {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.7rem 0.9rem;
+  padding: 0.72rem 0.95rem;
   border: 0;
-  border-radius: 12px;
+  border-radius: 14px;
   background: transparent;
   color: #4b4138;
   font: 600 0.92rem var(--font);
   cursor: pointer;
   text-align: left;
-  transition: all 0.15s ease;
+  transition: all 0.18s ease;
   position: relative;
 }
 
 .adm-side-btn:hover {
   background: #fbf7f0;
   color: var(--ink);
+  transform: translateX(2px);
 }
 
 .adm-side-btn-active {
-  background: var(--red) !important;
+  background: linear-gradient(135deg, #d90700 0%, #ba0600 100%) !important;
   color: #fff !important;
   font-weight: 700;
-  box-shadow: 0 4px 14px -3px rgba(217, 7, 0, 0.45);
+  box-shadow: 0 4px 14px -2px rgba(217, 7, 0, 0.42);
+  transform: translateX(2px);
 }
 
 .adm-side-icon {
@@ -3958,6 +3962,24 @@ main {
   color: #fff;
 }
 
+.adm-side-arrow {
+  font-size: 1.1rem;
+  line-height: 1;
+  opacity: 0.4;
+  margin-left: auto;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.adm-side-btn:hover .adm-side-arrow {
+  opacity: 0.8;
+  transform: translateX(2px);
+}
+
+.adm-side-btn-active .adm-side-arrow {
+  opacity: 0.9;
+  color: #fff;
+}
+
 /* Sidebar Footer (Buka Web & Logout) */
 .adm-sidebar-footer {
   padding-top: 1rem;
@@ -3967,12 +3989,24 @@ main {
   gap: 0.5rem;
 }
 
+.adm-sidebar-store-info {
+  padding: 0 0.4rem 0.2rem;
+  text-align: center;
+}
+
+.adm-store-version {
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+  font-weight: 600;
+}
+
 .adm-side-foot-link {
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  padding: 0.55rem 0.8rem;
-  border-radius: 10px;
+  padding: 0.6rem 0.85rem;
+  border-radius: 12px;
   background: #faf7f2;
   color: var(--ink);
   font: 600 0.85rem var(--font);
@@ -3982,14 +4016,15 @@ main {
 
 .adm-side-foot-link:hover {
   background: #eee5d8;
+  transform: translateY(-1px);
 }
 
 .adm-side-logout {
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  padding: 0.55rem 0.8rem;
-  border-radius: 10px;
+  padding: 0.6rem 0.85rem;
+  border-radius: 12px;
   border: 0;
   background: #fff0f0;
   color: var(--red);
@@ -4017,11 +4052,16 @@ main {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.85rem 1.25rem;
-  background: #fff;
+  padding: 0.9rem 1.4rem;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1.5px solid var(--line);
-  border-radius: 16px;
-  box-shadow: 0 2px 8px -4px rgba(0, 0, 0, 0.04);
+  border-radius: 18px;
+  box-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.04);
+  position: sticky;
+  top: 1.25rem;
+  z-index: 40;
 }
 
 .adm-header-left {
@@ -4031,6 +4071,9 @@ main {
 }
 
 .adm-header-crumb {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.05em;
@@ -4038,12 +4081,49 @@ main {
   color: var(--muted);
 }
 
+.adm-crumb-sep {
+  opacity: 0.5;
+}
+
 .adm-header-title {
-  margin: 0.1rem 0 0;
+  margin: 0.15rem 0 0;
   font-size: 1.25rem;
   font-weight: 800;
   color: var(--ink);
   letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.adm-header-icon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.adm-header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.adm-header-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.8rem;
+  border-radius: 10px;
+  background: #faf7f2;
+  border: 1px solid var(--line);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+@media (max-width: 768px) {
+  .adm-header-date {
+    display: none;
+  }
 }
 
 .adm-mobile-hamburger {
@@ -4864,34 +4944,43 @@ main {
   margin-top: 0.15rem;
 }
 
-/* POS Enhancements */
+/* POS & Catalog Filter Enhancements */
 .adm-pos-filter-bar {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
+  background: #ffffff;
+  padding: 0.9rem 1.15rem;
+  border-radius: 18px;
+  border: 1.5px solid var(--line);
+  box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.03);
 }
 
 .adm-pos-search {
   width: 100%;
-  padding: 0.65rem 1rem;
-  border-radius: 999px;
+  padding: 0.68rem 1.1rem;
+  border-radius: 12px;
   border: 1.5px solid var(--line);
-  font: 0.95rem var(--font);
-  background: #fff;
+  font: 500 0.92rem var(--font);
+  background: #faf7f2;
+  transition: all 0.2s ease;
 }
 
 .adm-pos-search:focus {
   outline: none;
   border-color: var(--red);
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(217, 7, 0, 0.12);
 }
 
 .adm-pos-chips {
   display: flex;
-  gap: 0.4rem;
+  gap: 0.45rem;
   overflow-x: auto;
-  padding-bottom: 0.3rem;
+  padding-bottom: 0.35rem;
   scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
 }
 
 .adm-pos-chips::-webkit-scrollbar {
@@ -4933,18 +5022,28 @@ main {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.8rem;
-  padding: 0.7rem 0.9rem;
+  gap: 0.85rem;
+  padding: 0.8rem 1rem;
   border: 1.5px solid var(--line);
   border-left: 5px solid var(--tone, var(--line));
-  border-radius: 14px;
+  border-radius: 16px;
   background: #fff;
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 6px -2px rgba(0, 0, 0, 0.03);
+}
+
+.adm-pick li:hover,
+.adm-row:hover,
+.adm-list > li:not(.adm-row):hover {
+  border-color: #e2dcd2;
+  box-shadow: 0 4px 12px -3px rgba(0, 0, 0, 0.06);
 }
 
 .adm-pick li[data-on="true"] {
-  border-color: rgba(217, 7, 0, 0.4);
+  border-color: rgba(217, 7, 0, 0.45);
   border-left-color: var(--red);
   background: #fff8f6;
+  box-shadow: 0 4px 14px -3px rgba(217, 7, 0, 0.12);
 }
 
 .adm-pick strong,
@@ -4952,6 +5051,8 @@ main {
 .adm-list strong {
   display: block;
   font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--ink);
 }
 
 .adm-pick small,
@@ -4959,7 +5060,8 @@ main {
 .adm-list small {
   display: block;
   color: var(--muted);
-  font-size: 0.8rem;
+  font-size: 0.82rem;
+  margin-top: 0.15rem;
 }
 
 .adm-pick em {
@@ -4973,13 +5075,14 @@ main {
 
 .adm-pay {
   position: sticky;
-  top: 5.5rem;
+  top: 6rem;
   display: grid;
-  gap: 0.9rem;
-  padding: 1.2rem;
-  border: 1.5px solid rgba(217, 7, 0, 0.18);
-  border-radius: 20px;
-  background: linear-gradient(160deg, #fff, var(--soft));
+  gap: 1rem;
+  padding: 1.4rem;
+  border: 1.5px solid rgba(217, 7, 0, 0.2);
+  border-radius: 22px;
+  background: linear-gradient(160deg, #ffffff 0%, #fdfaf6 100%);
+  box-shadow: 0 6px 20px -6px rgba(0, 0, 0, 0.06);
 }
 
 .adm-pay h2,
@@ -5122,6 +5225,18 @@ main {
   color: var(--red);
   font: 700 1.2rem var(--font);
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.adm-stk button:not(.link-btn):hover {
+  background: #ffd6d0;
+}
+
+.adm-stk button:not(.link-btn):active {
+  transform: scale(0.92);
 }
 
 .adm-stk button:nth-of-type(2) {
@@ -5129,15 +5244,26 @@ main {
   color: #fff;
 }
 
+.adm-stk button:nth-of-type(2):hover {
+  background: #b80600;
+}
+
 .adm-stk input {
-  width: 56px;
-  min-height: 36px;
+  width: 58px;
+  min-height: 38px;
   border: 1.5px solid var(--line);
-  border-radius: 10px;
+  border-radius: 12px;
   background: #fff;
   font: 700 1rem var(--font);
   text-align: center;
   font-variant-numeric: tabular-nums;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.adm-stk input:focus {
+  outline: none;
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px rgba(217, 7, 0, 0.12);
 }
 
 .adm-stk .link-btn {
