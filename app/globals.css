@@ -2088,7 +2088,7 @@ main {
 }
 
 .fridge[data-open="true"] .shelf li {
-  animation: productReveal 0.42s cubic-bezier(0.2, 0.9, 0.3, 1.2) calc(var(--order, 1) * 0.11s) backwards;
+  animation: productReveal 0.65s cubic-bezier(0.22, 1, 0.32, 1) calc(var(--order, 1) * 0.16s) backwards;
 }
 
 /* rak kaca: satu papan menerus dengan bibir krom */
@@ -2157,31 +2157,31 @@ main {
   z-index: 1;
 }
 
-/* Pintu Kiri */
+/* Pintu Kiri - Efek geser pelan dan halus (Smooth) */
 .door[data-side="l"] {
   left: 0;
   z-index: 5;
   border-right: 2px solid #202428;
-  transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.12s;
+  transition: transform 1.1s cubic-bezier(0.25, 1, 0.35, 1) 0.1s;
 }
 
-/* Pintu Kanan: bergerak dengan jeda halus agar terbuka satu-satu berurutan */
+/* Pintu Kanan - Efek geser pelan dan halus (Smooth) */
 .door[data-side="r"] {
   right: 0;
   z-index: 4;
   border-left: 2px solid #202428;
-  transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0s;
+  transition: transform 1.1s cubic-bezier(0.25, 1, 0.35, 1) 0s;
 }
 
-/* Saat terbuka: Pintu kiri geser duluan, pintu kanan menyusul halus */
+/* Saat terbuka: Pintu terbuka pelan & smooth berurutan (tidak terlalu cepat) */
 .fridge[data-open="true"] .door[data-side="l"] {
   transform: translateX(-102%);
-  transition: transform 0.72s cubic-bezier(0.22, 1, 0.36, 1) 0s, visibility 0s 0.85s;
+  transition: transform 1.35s cubic-bezier(0.22, 1, 0.32, 1) 0s, visibility 0s 1.45s;
 }
 
 .fridge[data-open="true"] .door[data-side="r"] {
   transform: translateX(102%);
-  transition: transform 0.72s cubic-bezier(0.22, 1, 0.36, 1) 0.18s, visibility 0s 0.95s;
+  transition: transform 1.35s cubic-bezier(0.22, 1, 0.32, 1) 0.22s, visibility 0s 1.6s;
 }
 
 .fridge[data-open="true"] .door {
@@ -2223,8 +2223,8 @@ main {
 /* Gagang pintu krom perak 3D */
 .handle {
   position: absolute;
-  top: 22%;
-  bottom: 22%;
+  top: 20%;
+  bottom: 20%;
   width: 10px;
   border-radius: 6px;
   background: linear-gradient(90deg, #64748b 0%, #f1f5f9 40%, #ffffff 50%, #64748b 100%);
@@ -2240,207 +2240,52 @@ main {
   left: 10px;
 }
 
-/* Panel konten di permukaan pintu (menarik & tidak polos) */
-.door-panel {
+/* Panel konten di permukaan pintu: Khusus Gambar Produk Tanpa Teks */
+.door-panel-photos {
   position: relative;
   z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 1.1rem;
   height: 100%;
-  padding: 0.95rem 0.55rem;
+  padding: 1.2rem 0.6rem;
   box-sizing: border-box;
-  text-align: center;
   pointer-events: none;
   user-select: none;
 }
 
-/* 1. Badge Brand Albafroz */
-.door-brand-badge {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: rgba(0, 0, 0, 0.32);
-  border: 1px solid rgba(255, 215, 0, 0.45);
-  border-radius: 10px;
-  padding: 0.35rem 0.5rem;
-  width: 90%;
-  max-width: 135px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
-}
-
-.door-crown {
-  font-size: 0.95rem;
-  line-height: 1;
-}
-
-.door-brand-name {
-  font-size: 0.84rem;
-  font-weight: 900;
-  letter-spacing: 0.12em;
-  color: #ffd700;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
-  margin-top: 1px;
-}
-
-.door-brand-sub {
-  font-size: 0.56rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.92);
-  letter-spacing: 0.03em;
-}
-
-/* 2. Indikator Digital Suhu Beku (Pintu Kanan) */
-.door-temp-badge {
+/* Kartu Stiker Foto Produk pada Pintu (Gambar saja, tidak ada teks) */
+.door-photo-card {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: rgba(12, 22, 34, 0.58);
-  border: 1px solid rgba(125, 211, 252, 0.45);
-  border-radius: 10px;
-  padding: 0.35rem 0.5rem;
-  width: 90%;
-  max-width: 135px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
-}
-
-.door-temp-dot {
-  position: absolute;
-  top: 6px;
-  right: 8px;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #10b981;
-  box-shadow: 0 0 6px #10b981;
-  animation: pulseLed 1.8s infinite;
-}
-
-@keyframes pulseLed {
-  0%, 100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.4;
-    transform: scale(0.85);
-  }
-}
-
-.door-temp-val {
-  font-size: 0.92rem;
-  font-weight: 900;
-  color: #bae6fd;
-  font-family: monospace, sans-serif;
-  letter-spacing: 0.05em;
-  line-height: 1.1;
-  text-shadow: 0 0 8px rgba(56, 189, 248, 0.6);
-}
-
-.door-temp-label {
-  font-size: 0.54rem;
-  font-weight: 700;
-  color: #7dd3fc;
-  letter-spacing: 0.08em;
-}
-
-/* 3. Jendela Kaca Berembun (Frosted Window) */
-.door-glass-window {
-  position: relative;
-  width: 90%;
-  max-width: 135px;
-  border-radius: 12px;
-  border: 1.5px solid rgba(255, 255, 255, 0.4);
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.22) 0%, rgba(190, 225, 255, 0.14) 60%, rgba(255, 255, 255, 0.28) 100%);
-  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.2), 0 6px 14px rgba(0, 0, 0, 0.15);
-  padding: 0.65rem 0.4rem;
+  width: 108px;
+  height: 108px;
+  border-radius: 20px;
   overflow: hidden;
-  backdrop-filter: blur(2px);
+  border: 3px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 10px 22px -4px rgba(0, 0, 0, 0.45), inset 0 2px 4px rgba(255, 255, 255, 0.6);
+  background: #fff;
+  transition: transform 0.25s ease;
 }
 
-.door-glass-glare {
+.door:hover .door-photo-card {
+  transform: scale(1.03);
+}
+
+.door-photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Efek kilauan kaca di atas foto produk */
+.door-photo-glare {
   position: absolute;
-  inset: -40% -20%;
-  background: linear-gradient(130deg, transparent 40%, rgba(255, 255, 255, 0.35) 48%, transparent 56%);
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 45%, transparent 60%);
   pointer-events: none;
-}
-
-.door-glass-content {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-}
-
-.door-food-icon {
-  font-size: 1.6rem;
-  line-height: 1.1;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
-}
-
-.door-food-title {
-  font-size: 0.72rem;
-  font-weight: 800;
-  color: #fff;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
-  white-space: nowrap;
-}
-
-.door-food-tag {
-  font-size: 0.56rem;
-  font-weight: 600;
-  color: #ffedd5;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
-  white-space: nowrap;
-}
-
-/* 4. Stiker Bawah & Ajakan Aksi */
-.door-tag-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  background: rgba(255, 255, 255, 0.95);
-  color: #991b1b;
-  padding: 0.3rem 0.55rem;
-  border-radius: 999px;
-  font-size: 0.62rem;
-  font-weight: 800;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
-  white-space: nowrap;
-}
-
-.door-tag-check {
-  color: #16a34a;
-  font-weight: 900;
-  font-size: 0.75rem;
-}
-
-.door-cta-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  background: linear-gradient(135deg, #fef08a, #facc15);
-  color: #713f12;
-  padding: 0.3rem 0.6rem;
-  border-radius: 999px;
-  font-size: 0.62rem;
-  font-weight: 800;
-  box-shadow: 0 3px 10px rgba(234, 179, 8, 0.35);
-  white-space: nowrap;
-  animation: ctaBounce 2.2s infinite;
-}
-
-@keyframes ctaBounce {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-3px);
-  }
 }
 
 /* Efek uap dingin & butiran salju */
@@ -2627,34 +2472,16 @@ main {
     padding: 0.9rem 0.6rem 0.4rem;
   }
 
-  .door-panel {
-    padding: 0.65rem 0.35rem;
+  .door-panel-photos {
+    gap: 0.75rem;
+    padding: 0.8rem 0.35rem;
   }
 
-  .door-brand-badge,
-  .door-temp-badge,
-  .door-glass-window {
-    width: 94%;
-    max-width: 120px;
-    padding: 0.3rem 0.35rem;
-  }
-
-  .door-brand-name {
-    font-size: 0.72rem;
-  }
-
-  .door-food-icon {
-    font-size: 1.3rem;
-  }
-
-  .door-food-title {
-    font-size: 0.64rem;
-  }
-
-  .door-tag-badge,
-  .door-cta-badge {
-    font-size: 0.58rem;
-    padding: 0.25rem 0.45rem;
+  .door-photo-card {
+    width: 82px;
+    height: 82px;
+    border-radius: 15px;
+    border-width: 2.5px;
   }
 
   .shelf {

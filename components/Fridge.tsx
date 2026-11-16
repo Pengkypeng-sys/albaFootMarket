@@ -60,40 +60,42 @@ export function Fridge() {
             ))}
           </div>
 
-          {/* PINTU KIRI (Bergeser ke Kiri) */}
+          {/* PINTU KIRI (Bergeser ke Kiri - Khusus Gambar Produk Tanpa Teks) */}
           <button
             className="door"
             data-side="l"
             type="button"
             onClick={toggle}
-            aria-label={open ? "Tutup pintu showcase" : "Buka pintu kiri showcase"}
+            aria-label={open ? "Tutup pintu showcase" : "Buka showcase pendingin"}
             tabIndex={open ? -1 : 0}
           >
             <div className="door-decor-snow door-snow-tl">❄</div>
             <div className="door-decor-snow door-snow-br">✻</div>
 
-            <div className="door-panel">
-              {/* Badge Brand Albafroz */}
-              <div className="door-brand-badge">
-                <span className="door-crown">👑</span>
-                <strong className="door-brand-name">ALBAFROZ</strong>
-                <span className="door-brand-sub">Frozen Food Market</span>
+            {/* Panel Pintu Kiri: Murni Gambar Produk Tanpa Teks */}
+            <div className="door-panel door-panel-photos">
+              <div className="door-photo-card">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/products/sambosa-frozen.jpg"
+                  alt="Sambosa Frozen"
+                  className="door-photo-img"
+                  width={110}
+                  height={110}
+                />
+                <div className="door-photo-glare" />
               </div>
 
-              {/* Jendela Kaca Berembun dengan Produk Spesial */}
-              <div className="door-glass-window">
-                <div className="door-glass-glare" />
-                <div className="door-glass-content">
-                  <span className="door-food-icon">🥟</span>
-                  <strong className="door-food-title">Kulit Sambosa</strong>
-                  <span className="door-food-tag">Crispy &amp; Renyah</span>
-                </div>
-              </div>
-
-              {/* Stiker Kualitas Halal & Fresh */}
-              <div className="door-tag-badge">
-                <span className="door-tag-check">✓</span>
-                <span>100% Halal &amp; Higienis</span>
+              <div className="door-photo-card">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/products/kulit-sambosa.jpg"
+                  alt="Kulit Sambosa"
+                  className="door-photo-img"
+                  width={110}
+                  height={110}
+                />
+                <div className="door-photo-glare" />
               </div>
             </div>
 
@@ -101,40 +103,42 @@ export function Fridge() {
             <i className="handle" aria-hidden />
           </button>
 
-          {/* PINTU KANAN (Bergeser ke Kanan dengan Jeda Halus) */}
+          {/* PINTU KANAN (Bergeser ke Kanan - Khusus Gambar Produk Tanpa Teks) */}
           <button
             className="door"
             data-side="r"
             type="button"
             onClick={toggle}
-            aria-label={open ? "Tutup pintu showcase" : "Buka pintu kanan showcase"}
+            aria-label={open ? "Tutup pintu showcase" : "Buka showcase pendingin"}
             tabIndex={open ? -1 : 0}
           >
             <div className="door-decor-snow door-snow-tr">❄</div>
             <div className="door-decor-snow door-snow-bl">✻</div>
 
-            <div className="door-panel">
-              {/* Indikator Digital Suhu Dingin */}
-              <div className="door-temp-badge">
-                <span className="door-temp-dot" />
-                <strong className="door-temp-val">-18°C</strong>
-                <span className="door-temp-label">EXTRA FRESH</span>
+            {/* Panel Pintu Kanan: Murni Gambar Produk Tanpa Teks */}
+            <div className="door-panel door-panel-photos">
+              <div className="door-photo-card">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/products/kebab.jpg"
+                  alt="Kebab Daging"
+                  className="door-photo-img"
+                  width={110}
+                  height={110}
+                />
+                <div className="door-photo-glare" />
               </div>
 
-              {/* Jendela Kaca Berembun Kebab & Canai */}
-              <div className="door-glass-window">
-                <div className="door-glass-glare" />
-                <div className="door-glass-content">
-                  <span className="door-food-icon">🌯</span>
-                  <strong className="door-food-title">Kebab &amp; Canai</strong>
-                  <span className="door-food-tag">Daging Sapi Pilihan</span>
-                </div>
-              </div>
-
-              {/* Ajakan Interaktif Klik Buka */}
-              <div className="door-cta-badge">
-                <span className="door-cta-icon">✨</span>
-                <span>Buka Showcase ➔</span>
+              <div className="door-photo-card">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/products/roti-canai.jpg"
+                  alt="Roti Canai"
+                  className="door-photo-img"
+                  width={110}
+                  height={110}
+                />
+                <div className="door-photo-glare" />
               </div>
             </div>
 
