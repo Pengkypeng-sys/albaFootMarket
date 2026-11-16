@@ -84,8 +84,8 @@ export function SearchBox({
 
   const selectedCategoryLabel =
     category === "semua"
-      ? "Kategori"
-      : categories.find((c) => c.id === category)?.label ?? "Kategori";
+      ? "Produk"
+      : categories.find((c) => c.id === category)?.label ?? "Produk";
 
   return (
     <div className={large ? "search search-lg" : "search"} ref={root}>
@@ -156,13 +156,12 @@ export function SearchBox({
             data-active={category !== "semua"}
             aria-expanded={filterOpen}
             aria-controls={menuId}
-            aria-label="Pilih kategori filter"
+            aria-label="Pilih kategori produk"
             onClick={() => {
               setFilterOpen((o) => !o);
               setOpen(false);
             }}
           >
-            <span className="search-in-filter-icon">🏷️</span>
             <span className="search-in-filter-text">{selectedCategoryLabel}</span>
             <svg
               className="search-in-chevron"
@@ -185,7 +184,7 @@ export function SearchBox({
           {/* Menu Dropdown Filter Pilihan Kategori */}
           {filterOpen && (
             <div className="search-in-menu" id={menuId} role="menu">
-              <div className="search-in-menu-header">Filter Kategori</div>
+              <div className="search-in-menu-header">Kategori Produk</div>
               <div className="search-in-menu-list">
                 {categories.map((c) => (
                   <button
