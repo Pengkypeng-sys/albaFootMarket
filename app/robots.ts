@@ -1,8 +1,10 @@
 import type { MetadataRoute } from "next";
 
+const base = process.env.NEXT_PUBLIC_SITE_URL || "https://albafootmarket.vercel.app";
+
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: { userAgent: "*", allow: "/" },
-    sitemap: "https://albafoodmarket.example/sitemap.xml",
+    sitemap: `${base}/sitemap.xml`,
   };
 }

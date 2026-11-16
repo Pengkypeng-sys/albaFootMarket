@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { AddBox } from "@/components/AddBox";
 import { Gallery } from "@/components/Gallery";
 import { ProductCard } from "@/components/ProductCard";
-import { formatRp, getProduct, products } from "@/data/products";
+import { categories, formatRp, getProduct, products } from "@/data/products";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -47,18 +47,29 @@ export default async function ProductPage({ params }: Props) {
       <Link className="crumb" href="/produk" style={{ display: "inline-block" }}>
         ← Semua Produk
       </Link>
-      <div className="detail">
+      <div className="detail" data-cat={product.category}>
         <Gallery product={product} />
-        <div>
+        <div className="detail-info">
+          <span className="cat-pill">{categories.find((c) => c.id === product.category)?.label}</span>
           <h1>{product.name}</h1>
-          {product.pack ? <p className="pack">{product.pack}</p> : null}
           <p className="lede">{product.summary}</p>
-          {product.price ? (
-            <p className="price">{formatRp(product.price)}</p>
-          ) : (
-            <p className="fine">Harga: tanya via WhatsApp.</p>
-          )}
-
+          {product.flavor ? (
+            <p className="flavor">
+              <span>Rasa</span>
+              <b>{product.flavor}</b>
+            </p>
+          ) : null}
+          <div className="price-box">
+            {product.price ? (
+              <>
+                <span>Harga</span>
+                <p className="price">{formatRp(product.price)}</p>
+              </>
+            ) : (
+              <p className="fine">Harga: tanya via WhatsApp.</p>
+            )}
+            {product.pack ? <b className="pack-pill">{product.pack}</b> : null}
+          </div>
           {product.preorder ? <p className="fine">Pre-order. Jadwal dikonfirmasi admin.</p> : null}
           <AddBox slug={product.slug} name={product.name} preorder={product.preorder} />
         </div>

@@ -1,8 +1,7 @@
 import type { MetadataRoute } from "next";
 import { products } from "@/data/products";
 
-// TODO: konfirmasi domain produksi
-const base = "https://albafoodmarket.example";
+const base = process.env.NEXT_PUBLIC_SITE_URL || "https://albafootmarket.vercel.app";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const routes = ["", "/produk", "/lokasi"];

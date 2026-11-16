@@ -3,3 +3,7 @@ node_modules
 out
 *.log
 .DS_Store
+.env*
+!.env.example
+.data/
+tsconfig.tsbuildinfo

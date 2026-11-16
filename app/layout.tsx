@@ -17,9 +17,10 @@ const font = Plus_Jakarta_Sans({
   variable: "--font",
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://albafootmarket.vercel.app";
+
 export const metadata: Metadata = {
-  // TODO: konfirmasi domain produksi
-  metadataBase: new URL("https://albafoodmarket.example"),
+  metadataBase: new URL(siteUrl),
   title: {
     default: "Alba Food Market | Kulit Sambosa, Roti Cane, Kurma di Sawangan Depok",
     template: "%s | Alba Food Market",

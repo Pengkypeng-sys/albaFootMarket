@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Fridge } from "@/components/Fridge";
+import { HeroStage } from "@/components/HeroStage";
 import { ProductCard } from "@/components/ProductCard";
 import { Rail } from "@/components/Rail";
 import { Reveal } from "@/components/Reveal";
@@ -27,7 +27,7 @@ export default function Home() {
           </div>
         </div>
         <div className="hero-media rise" style={rise(1)}>
-          <Fridge />
+          <HeroStage />
         </div>
       </section>
 
@@ -56,11 +56,11 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="wrap" style={{ paddingBottom: "3rem" }}>
+      <section className="wrap home-end">
         <Reveal className="info">
           <div>
-            <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap", marginBottom: "0.25rem" }}>
-              <h3 style={{ margin: 0 }}>Jam buka</h3>
+            <div className="info-head">
+              <h3>Jam buka</h3>
               <StatusBadge />
             </div>
             <p>{contact.hours.label}</p>
