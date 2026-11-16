@@ -78,6 +78,33 @@ export function Shell({ children }: { children: React.ReactNode }) {
             <h3>{contact.name}</h3>
             <p>{contact.addressShort}</p>
             <p>{contact.hours.label}</p>
+            <p style={{ color: "var(--muted)", fontSize: "0.85rem", marginTop: "-0.15rem" }}>
+              {contact.hours.closedNote}
+            </p>
+            <p style={{ marginTop: "0.45rem" }}>
+              <Link href="/lokasi" style={{ color: "var(--red)", fontWeight: 600 }}>
+                Peta &amp; rute →
+              </Link>
+            </p>
+          </div>
+          <div>
+            <h3>Layanan &amp; Pembayaran</h3>
+            <p style={{ fontSize: "0.78rem", textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--muted)", fontWeight: 700, margin: "0 0 0.35rem" }}>
+              Layanan
+            </p>
+            <ul className="pills" style={{ marginBottom: "0.85rem" }}>
+              {contact.services.map((s) => (
+                <li key={s}>{s}</li>
+              ))}
+            </ul>
+            <p style={{ fontSize: "0.78rem", textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--muted)", fontWeight: 700, margin: "0 0 0.35rem" }}>
+              Pembayaran
+            </p>
+            <ul className="pills">
+              {contact.payments.map((p) => (
+                <li key={p}>{p}</li>
+              ))}
+            </ul>
           </div>
           <div>
             <h3>Menu</h3>
