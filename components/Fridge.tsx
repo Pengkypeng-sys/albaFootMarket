@@ -28,10 +28,9 @@ export function Fridge() {
               {featured.map((p, i) => {
                 // Kolom 1..4 (dari kiri ke kanan)
                 const col = (i % 4) + 1;
-                // Urutan muncul produk saat pintu bergeser terbuka satu per satu:
-                // Pintu kiri geser ke kiri: kolom 2 tampak dulu, baru kolom 1
-                // Pintu kanan geser ke kanan: kolom 3 tampak dulu, baru kolom 4
-                const order = col === 2 ? 1 : col === 1 ? 2 : col === 3 ? 3 : 4;
+                // Saat kedua pintu terbuka berbarengan dari tengah:
+                // Kolom tengah (2 & 3) terlihat bersamaan di awal, lalu kolom luar (1 & 4)
+                const order = col === 2 || col === 3 ? 1 : 2;
                 return (
                   <li
                     key={p.slug}

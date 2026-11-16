@@ -2180,7 +2180,7 @@ main {
   left: 0;
   z-index: 5;
   border-right: 2px solid #202428;
-  transition: transform 1.1s cubic-bezier(0.25, 1, 0.35, 1) 0.1s;
+  transition: transform 1.1s cubic-bezier(0.25, 1, 0.35, 1) 0s;
 }
 
 /* Pintu Kanan - Efek geser pelan dan halus (Smooth) */
@@ -2191,15 +2191,15 @@ main {
   transition: transform 1.1s cubic-bezier(0.25, 1, 0.35, 1) 0s;
 }
 
-/* Saat terbuka: Pintu terbuka pelan & smooth berurutan (tidak terlalu cepat) */
+/* Saat terbuka: Pintu kiri dan kanan terbuka BERBARENGAN secara halus dan sinkron */
 .fridge[data-open="true"] .door[data-side="l"] {
   transform: translateX(-102%);
-  transition: transform 1.35s cubic-bezier(0.22, 1, 0.32, 1) 0s, visibility 0s 1.45s;
+  transition: transform 1.25s cubic-bezier(0.22, 1, 0.32, 1) 0s, visibility 0s 1.35s;
 }
 
 .fridge[data-open="true"] .door[data-side="r"] {
   transform: translateX(102%);
-  transition: transform 1.35s cubic-bezier(0.22, 1, 0.32, 1) 0.22s, visibility 0s 1.6s;
+  transition: transform 1.25s cubic-bezier(0.22, 1, 0.32, 1) 0s, visibility 0s 1.35s;
 }
 
 .fridge[data-open="true"] .door {
