@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { HeroStage } from "@/components/HeroStage";
+import { Fridge } from "@/components/Fridge";
 import { ProductCard } from "@/components/ProductCard";
 import { Rail } from "@/components/Rail";
 import { Reveal } from "@/components/Reveal";
@@ -27,7 +27,7 @@ export default function Home() {
           </div>
         </div>
         <div className="hero-media rise" style={rise(1)}>
-          <HeroStage />
+          <Fridge />
         </div>
       </section>
 

@@ -2059,268 +2059,773 @@ main {
   }
 }
 
-/* ---------- panggung foto hero ---------- */
-.stage {
-  position: relative;
-  isolation: isolate;
+/* ---------- kulkas ---------- */
+.fridge {
+  max-width: 395px;
   width: 100%;
-  aspect-ratio: 5 / 4;
-  overflow: hidden;
-  border-radius: 28px;
-  background: var(--soft);
-  box-shadow: 0 30px 60px -28px rgba(92, 60, 20, 0.55);
+  margin-inline: auto;
 }
 
-.stage-slide {
+.fr-body {
+  position: relative;
+  padding-bottom: 18px;
+  border-radius: 28px 28px 12px 12px;
+  background: linear-gradient(100deg, #e8261d, #d90700 45%, #c10600);
+  box-shadow: 0 28px 44px -30px rgba(0, 0, 0, 0.5), inset 0 3px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -4px 0 rgba(0, 0, 0, 0.18), inset 0 0 0 2px rgba(255, 255, 255, 0.12);
+  transform-origin: 50% 60%;
+  transform: none;
+  opacity: 1;
+}
+
+.fridge[data-zoom="true"] .fr-body {
+  transform: none;
+  opacity: 1;
+}
+
+.fr-body::before,
+.fr-body::after {
+  content: "";
+  position: absolute;
+}
+
+.fr-body::before {
+  inset: auto 10% -12px;
+  height: 12px;
+  border-radius: 0 0 8px 8px;
+  background: linear-gradient(90deg, #2b2e31 0 16%, transparent 16% 84%, #2b2e31 84%);
+  z-index: -1;
+}
+
+.fr-body::after {
+  inset: auto 4% -30px;
+  height: 22px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(0, 0, 0, 0.3), transparent);
+  z-index: -2;
+}
+
+.fr-top {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 14px 14px 0;
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  background: #fffaf3;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12), 0 2px 0 rgba(0, 0, 0, 0.18);
+  color: var(--ink);
+}
+
+.fr-top .led {
+  position: absolute;
+  left: 0.9rem;
+}
+
+.fr-top p {
+  margin: 0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.led {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #3a4046;
+  transition: background 0.4s 0.5s, box-shadow 0.4s 0.5s;
+}
+
+.fridge[data-open="true"] .led {
+  background: var(--ok);
+  box-shadow: 0 0 8px var(--ok);
+}
+
+.fr-unit {
+  position: relative;
+  overflow: hidden;
+  margin: 12px 14px 0;
+  border-radius: 14px;
+  /* gasket karet tebal + bayangan lekuk */
+  box-shadow: 0 0 0 7px #2a2d30, 0 0 0 8px rgba(255, 255, 255, 0.22), 0 12px 18px -6px rgba(0, 0, 0, 0.45);
+}
+
+.fr-cab {
+  position: relative;
+  overflow: hidden;
+  padding: 1.1rem 0.9rem 0;
+  background: #ffffff;
+  box-shadow: inset 0 0 0 1.5px #e2e8f0, inset 0 16px 24px -10px rgba(255, 255, 255, 1);
+}
+
+.fr-cab::after {
+  display: none !important;
+}
+
+/* ---------- SHOWCASE SPOTLIGHT SATU PER SATU (SWIPEABLE SLIDER) ---------- */
+.fr-cab-slider {
+  position: relative;
+  overflow: hidden;
+  padding: 1.2rem 0.8rem 1rem;
+  min-height: 350px;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+}
+
+.fr-spotlight-wrap {
+  position: relative;
+  width: 100%;
+  height: 285px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fr-spotlight-card {
   position: absolute;
   inset: 0;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   opacity: 0;
-  transition: opacity 0.9s ease;
+  transform: scale(0.92) translateX(30px);
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
 }
 
-.stage-slide[data-on="true"] {
+.fr-spotlight-card[data-active="true"] {
   opacity: 1;
-  z-index: 1;
+  transform: scale(1) translateX(0);
+  pointer-events: auto;
+  z-index: 3;
 }
 
-/* Posisi akhir gerak kamera; slide yang memudar tetap di sini supaya tidak melompat */
-.stage-img {
+.fr-spotlight-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: var(--ink);
+  transition: transform 0.25s ease;
+  max-width: 250px;
+  width: 100%;
+}
+
+.fr-spotlight-link:hover {
+  transform: translateY(-2px);
+}
+
+/* Gambar Produk Besar & Menggoda */
+.fr-spotlight-img-wrap {
+  position: relative;
+  width: 230px;
+  height: 180px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow:
+    0 14px 30px -6px rgba(0, 0, 0, 0.28),
+    0 4px 12px rgba(0, 0, 0, 0.12),
+    inset 0 0 0 1.5px rgba(255, 255, 255, 0.9);
+}
+
+.fr-spotlight-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transform: scale(1.1) translate(-1.5%, -1%);
+  transition: transform 0.4s ease;
 }
 
-.stage-slide:nth-child(even) .stage-img {
-  transform: scale(1.1) translate(1.5%, -1%);
+.fr-spotlight-link:hover .fr-spotlight-img {
+  transform: scale(1.06);
 }
 
-/* Uap tipis di atas makanan panas */
-.steam {
+.fr-spotlight-badge {
   position: absolute;
-  left: 50%;
-  top: 28%;
-  z-index: 2;
-  width: 46%;
-  height: 42%;
-  transform: translateX(-50%);
-  mix-blend-mode: screen;
-  pointer-events: none;
-}
-
-.steam i {
-  position: absolute;
-  bottom: 0;
-  width: 40%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.55), transparent 70%);
-  filter: blur(14px);
-  opacity: 0;
-}
-
-.steam i:nth-child(1) {
-  left: 4%;
-}
-
-.steam i:nth-child(2) {
-  left: 30%;
-}
-
-.steam i:nth-child(3) {
-  left: 56%;
-}
-
-/* Kilau cahaya yang lewat pelan */
-.stage::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  background: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, 0.16) 50%, transparent 60%);
-  transform: translateX(-100%);
-  pointer-events: none;
-}
-
-.stage-cap {
-  position: absolute;
-  inset: auto 0 0;
-  z-index: 3;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 0.5rem 1rem;
-  padding: 3.5rem 1.25rem 1.1rem;
-  color: #fff;
-  background: linear-gradient(to top, rgba(40, 18, 6, 0.88), rgba(40, 18, 6, 0.5) 55%, transparent);
-}
-
-.stage-cap b {
-  display: block;
-  font-size: clamp(1.05rem, 2.4vw, 1.35rem);
-  font-weight: 800;
-  line-height: 1.2;
-}
-
-.stage-cap small {
-  display: block;
-  font-size: 0.85rem;
-  font-weight: 600;
-  opacity: 0.92;
-}
-
-.stage-price {
-  padding: 0.3rem 0.85rem;
-  border-radius: 999px;
+  top: 10px;
+  left: 10px;
   background: var(--red);
-  font-size: 0.95rem;
-  font-weight: 800;
-}
-
-.stage-nav {
-  position: absolute;
-  top: 50%;
-  z-index: 4;
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  margin-top: -22px;
-  border: 0;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.92);
-  color: var(--red);
-  font-size: 1.5rem;
-  line-height: 1;
-  box-shadow: 0 6px 16px -6px rgba(0, 0, 0, 0.4);
-  cursor: pointer;
-}
-
-.stage-prev {
-  left: 0.75rem;
-}
-
-.stage-next {
-  right: 0.75rem;
-}
-
-.stage-dots {
-  position: absolute;
-  top: 0.75rem;
-  left: 50%;
-  z-index: 4;
-  display: flex;
-  padding: 0 0.35rem;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 9px;
   border-radius: 999px;
-  background: rgba(40, 18, 6, 0.35);
-  transform: translateX(-50%);
+  letter-spacing: 0.02em;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
-.stage-dots button {
-  display: grid;
-  place-items: center;
-  width: 24px;
-  height: 28px;
-  padding: 0;
-  border: 0;
-  background: none;
+.fr-spotlight-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.3rem;
+  margin-top: 0.75rem;
+  width: 100%;
+}
+
+.fr-spotlight-name {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.fr-spotlight-price {
+  font-size: 0.98rem;
+  font-weight: 800;
+  color: var(--red);
+}
+
+.fr-spotlight-ask {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #a45318;
+}
+
+.fr-spotlight-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #fff;
+  background: var(--red);
+  padding: 4px 14px;
+  border-radius: 999px;
+  box-shadow: 0 3px 10px rgba(217, 7, 0, 0.32);
+  transition: all 0.2s ease;
+  margin-top: 2px;
+}
+
+.fr-spotlight-link:hover .fr-spotlight-cta {
+  background: #b50500;
+  transform: scale(1.04);
+}
+
+/* Tombol Navigasi Panah Geser Kiri / Kanan */
+.fr-slide-nav {
+  position: absolute;
+  top: 45%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.88);
+  color: #1e293b;
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(4px);
+  transition: all 0.2s ease;
 }
 
-.stage-dots button::before {
-  content: "";
+.fr-slide-nav:hover {
+  background: var(--red);
+  color: #fff;
+  border-color: var(--red);
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 6px 16px rgba(217, 7, 0, 0.35);
+}
+
+.fr-slide-prev {
+  left: 8px;
+}
+
+.fr-slide-next {
+  right: 8px;
+}
+
+/* Indikator Titik (Dots) */
+.fr-spotlight-dots {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 0.35rem;
+}
+
+.fr-dot {
   width: 7px;
   height: 7px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.65);
-  transition: width 0.3s, background 0.3s;
+  border: none;
+  background: rgba(30, 41, 59, 0.25);
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.25s ease;
 }
 
-.stage-dots button[aria-current="true"]::before {
+.fr-dot:hover {
+  background: rgba(30, 41, 59, 0.5);
+}
+
+.fr-dot[data-active="true"] {
   width: 20px;
+  background: var(--red);
+  box-shadow: 0 2px 5px rgba(217, 7, 0, 0.35);
+}
+
+/* Rak produk kulkas */
+.shelf {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin: 0 -0.9rem;
+  padding: 0;
+  list-style: none;
+}
+
+.shelf li {
+  position: relative;
+  min-width: 0;
+  padding: 0.55rem 0.5rem 1rem;
+  opacity: 1;
+  transform: none;
+}
+
+/* Animasi produk terbuka satu per satu mengikuti pergeseran pintu kulkas */
+@keyframes productReveal {
+  0% {
+    opacity: 0.55;
+    transform: scale(0.92) translateY(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.fridge[data-open="true"] .shelf li {
+  animation: productReveal 0.65s cubic-bezier(0.22, 1, 0.32, 1) calc(var(--order, 1) * 0.16s) backwards;
+}
+
+/* rak kaca: satu papan menerus dengan bibir krom */
+.shelf li::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 14px;
+  background: linear-gradient(#fff 0 22%, #dbe6ed 22% 60%, #7f95a4 60% 68%, rgba(127, 149, 164, 0.25) 68%);
+}
+
+.shelf a {
+  position: relative;
+  display: block;
+  text-align: center;
+}
+
+.shelf img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  padding: 4px;
+  border-radius: 14px;
+  object-fit: cover;
+  background: var(--tone, #fff);
+  filter: saturate(1.06) contrast(1.03);
+  box-shadow: 0 8px 10px -8px rgba(30, 70, 100, 0.55);
+}
+
+.shelf span {
+  min-height: 4.4em;
+  display: grid;
+  place-items: center;
+  margin-top: 0.45rem;
+  padding: 2px 3px;
+  border-radius: 6px;
+  background: #fffaf3;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  font-size: 0.64rem;
+  font-weight: 700;
+  line-height: 1.3;
+  text-wrap: balance;
+}
+
+/* ---------- PINTU GESER PENDINGIN (SHOWCASE DOORS) ---------- */
+.door {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: calc(50% + 1px);
+  border: 0;
+  background: linear-gradient(165deg, #f03328 0%, #d90700 45%, #b50500 100%);
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.25), inset 0 3px 6px rgba(255, 255, 255, 0.35),
+    inset 0 -4px 8px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+/* Kilauan refleksi kaca pintu */
+.door::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, 0.08) 48%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.06) 52%, transparent 60%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Pintu Kiri - Efek geser pelan dan halus (Smooth) */
+.door[data-side="l"] {
+  left: 0;
+  z-index: 5;
+  border-right: 2px solid #202428;
+  transition: transform 1.1s cubic-bezier(0.25, 1, 0.35, 1) 0s;
+}
+
+/* Pintu Kanan - Efek geser pelan dan halus (Smooth) */
+.door[data-side="r"] {
+  right: 0;
+  z-index: 4;
+  border-left: 2px solid #202428;
+  transition: transform 1.1s cubic-bezier(0.25, 1, 0.35, 1) 0s;
+}
+
+/* Saat terbuka: Pintu kiri dan kanan terbuka BERBARENGAN secara halus dan sinkron */
+.fridge[data-open="true"] .door[data-side="l"] {
+  transform: translateX(-102%);
+  transition: transform 1.25s cubic-bezier(0.22, 1, 0.32, 1) 0s, visibility 0s 1.35s;
+}
+
+.fridge[data-open="true"] .door[data-side="r"] {
+  transform: translateX(102%);
+  transition: transform 1.25s cubic-bezier(0.22, 1, 0.32, 1) 0s, visibility 0s 1.35s;
+}
+
+.fridge[data-open="true"] .door {
+  pointer-events: none;
+  visibility: hidden;
+}
+
+/* Ornamen kepingan salju ikonik kulkas pendingin retro */
+.door-snowflake {
+  position: absolute;
+  top: 22%;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 3;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.25));
+  transition: transform 0.25s ease;
+}
+
+.door:hover .door-snowflake {
+  transform: translateX(-50%) scale(1.08);
+}
+
+/* Gagang pintu krom perak 3D */
+.handle {
+  position: absolute;
+  top: 20%;
+  bottom: 20%;
+  width: 10px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #64748b 0%, #f1f5f9 40%, #ffffff 50%, #64748b 100%);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.45), inset 0 1px 2px rgba(255, 255, 255, 0.8);
+  z-index: 6;
+}
+
+.door[data-side="l"] .handle {
+  right: 10px;
+}
+
+.door[data-side="r"] .handle {
+  left: 10px;
+}
+
+/* Panel konten di permukaan pintu: Khusus Icon Menarik Tanpa Teks */
+.door-panel-icons {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.1rem;
+  height: 100%;
+  padding: 1rem 0.5rem;
+  box-sizing: border-box;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Lencana Icon Bulat Elegan (Gold & Glass Medallion) - Ukuran Pas & Proporsional */
+.door-icon-badge {
+  position: relative;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 35% 30%, #ffffff 0%, #fff7ed 60%, #fed7aa 100%);
+  border: 2px solid rgba(255, 235, 180, 0.95);
+  box-shadow:
+    0 6px 14px -2px rgba(0, 0, 0, 0.4),
+    0 2px 5px rgba(0, 0, 0, 0.22),
+    inset 0 1.5px 3px rgba(255, 255, 255, 0.9),
+    inset 0 -1.5px 3px rgba(180, 83, 9, 0.2);
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease;
+  overflow: hidden;
+}
+
+.door:hover .door-icon-badge {
+  transform: scale(1.08);
+  box-shadow:
+    0 8px 18px -2px rgba(0, 0, 0, 0.45),
+    0 0 12px rgba(255, 235, 180, 0.45);
+}
+
+.door-icon-badge svg {
+  width: 32px;
+  height: 32px;
+  display: block;
+  filter: drop-shadow(0 2px 3px rgba(120, 53, 15, 0.2));
+  transition: transform 0.25s ease;
+}
+
+.door:hover .door-icon-badge svg {
+  transform: scale(1.05);
+}
+
+/* Efek kilauan kaca di atas lencana icon */
+.door-icon-glare {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.05) 100%);
+  border-radius: 50% 50% 100% 100% / 50% 50% 20% 20%;
+  pointer-events: none;
+}
+
+/* Efek uap dingin & butiran salju */
+.mist {
+  position: absolute;
+  inset: auto -10% -30% -10%;
+  height: 70%;
+  background: radial-gradient(closest-side, rgba(255, 255, 255, 0.95), transparent);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.fridge[data-open="true"] .mist {
+  opacity: 0.7;
+}
+
+.flake {
+  position: absolute;
+  top: 0;
+  left: calc(8% + var(--k) * 10%);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
   background: #fff;
+  box-shadow: 0 0 6px rgba(150, 210, 245, 0.9);
+  opacity: 0;
+  pointer-events: none;
 }
 
-/* HP: geser dengan jari, panah tidak perlu menutupi makanan */
-@media (pointer: coarse) {
-  .stage-nav {
-    display: none;
+.fr-foot {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1.5rem;
+  transition: opacity 0.25s ease;
+}
+
+.fridge:not([data-zoom="true"]) .fr-foot {
+  opacity: 0;
+}
+
+.fr-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-height: 44px;
+  padding: 0.55rem 1.45rem;
+  border-radius: 999px;
+  border: 1.5px solid rgba(217, 7, 0, 0.28);
+  background: #ffffff;
+  color: var(--ink);
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(217, 7, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+}
+
+.fr-pill-btn:hover {
+  background: #fff6f5;
+  border-color: var(--red);
+  color: var(--red);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px -4px rgba(217, 7, 0, 0.22);
+}
+
+.fr-pill-btn:active {
+  transform: translateY(0) scale(0.97);
+}
+
+.fr-pill-btn[data-open="true"] {
+  background: #fff2f1;
+  border-color: var(--red);
+  color: var(--red);
+  box-shadow: 0 6px 20px -3px rgba(217, 7, 0, 0.2);
+}
+
+.fr-pill-btn[data-open="true"]:hover {
+  background: var(--red);
+  border-color: var(--red);
+  color: #ffffff;
+  box-shadow: 0 10px 26px -4px rgba(217, 7, 0, 0.35);
+}
+
+/* Pembungkus Ikon dengan Animasi Rotasi & Crossfade Lembut */
+.fr-pill-icon-wrap {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.fr-icon-open,
+.fr-icon-close {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.38s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Saat showcase tertutup: Ikon Buka aktif */
+.fr-pill-btn:not([data-open="true"]) .fr-icon-open {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
+.fr-pill-btn:not([data-open="true"]) .fr-icon-close {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.5);
+  pointer-events: none;
+}
+
+/* Saat showcase terbuka: Ikon Tutup aktif */
+.fr-pill-btn[data-open="true"] .fr-icon-open {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.5);
+  pointer-events: none;
+}
+
+.fr-pill-btn[data-open="true"] .fr-icon-close {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
+.fr-pill-label {
+  line-height: 1;
+}
+
+/* Panah Indikator Halus */
+.fr-pill-arrow {
+  margin-left: 0.15rem;
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  flex-shrink: 0;
+}
+
+.fr-pill-btn:not([data-open="true"]):hover .fr-pill-arrow {
+  transform: translateX(3px);
+}
+
+.fr-pill-btn[data-open="true"] .fr-pill-arrow {
+  transform: rotate(180deg);
+}
+
+.fr-pill-btn[data-open="true"]:hover .fr-pill-arrow {
+  transform: rotate(180deg) translateX(3px);
+}
+
+@keyframes dolly {
+  0% {
+    opacity: 0;
+    transform: translateY(14%) scale(0.5) rotateX(16deg);
+    filter: blur(4px);
+  }
+  25% {
+    opacity: 1;
+  }
+  62% {
+    transform: translateY(-1%) scale(1.07) rotateX(0);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+    filter: none;
   }
 }
 
-@media (max-width: 860px) {
-  .stage {
-    aspect-ratio: 4 / 3;
-  }
-
-  .stage-cap {
-    padding: 3rem 1rem 0.9rem;
+@keyframes drop {
+  from {
+    opacity: 0;
+    transform: translateY(-40px);
   }
 }
 
-/* Gerak hanya untuk yang tidak membatasi animasi */
-@media (prefers-reduced-motion: no-preference) {
-  .stage-slide[data-on="true"] .stage-img {
-    animation: push 7s ease-out;
+@keyframes snow {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
   }
-
-  .stage-slide[data-on="true"] .stage-cap {
-    animation: cap 0.7s 0.2s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  15% {
+    opacity: 0.9;
   }
-
-  .stage-slide[data-on="true"] .steam i {
-    animation: steam 4.5s ease-out infinite;
+  100% {
+    opacity: 0;
+    transform: translateY(210px) translateX(14px);
   }
+}
 
-  .stage-slide[data-on="true"] .steam i:nth-child(2) {
-    animation-delay: 1.5s;
+@keyframes mist {
+  0% {
+    opacity: 0.95;
+    transform: translateY(0);
   }
-
-  .stage-slide[data-on="true"] .steam i:nth-child(3) {
-    animation-delay: 3s;
-  }
-
-  .stage::after {
-    animation: glint 8s 1.5s ease-in-out infinite;
-  }
-
-  @keyframes push {
-    from {
-      transform: none;
-    }
-  }
-
-  @keyframes cap {
-    from {
-      opacity: 0;
-      transform: translateY(14px);
-    }
-  }
-
-  @keyframes steam {
-    0% {
-      opacity: 0;
-      transform: translateY(25%) scale(0.6);
-    }
-    25% {
-      opacity: 0.55;
-    }
-    100% {
-      opacity: 0;
-      transform: translateY(-130%) scale(1.5);
-    }
-  }
-
-  @keyframes glint {
-    0%,
-    55% {
-      transform: translateX(-100%);
-    }
-    100% {
-      transform: translateX(100%);
-    }
+  100% {
+    opacity: 0;
+    transform: translateY(35%);
   }
 }
 
@@ -2365,8 +2870,7 @@ main {
     width: 100%;
     height: 86dvh;
     max-height: 86dvh;
-    border-left: 0;
-    border-top: 4px solid var(--red);
+    padding: 0;
     border-radius: 24px 24px 0 0;
     animation-name: sheet;
   }
@@ -2385,17 +2889,65 @@ main {
     width: 32px;
     height: 32px;
   }
+
+  .fridge {
+    max-width: 345px;
+  }
+
+  .fr-cab {
+    padding: 0.9rem 0.6rem 0.4rem;
+  }
+
+  .door-panel-icons {
+    gap: 0.75rem;
+    padding: 0.7rem 0.3rem;
+  }
+
+  .door-icon-badge {
+    width: 44px;
+    height: 44px;
+  }
+
+  .door-icon-badge svg {
+    width: 26px;
+    height: 26px;
+  }
+
+  .shelf {
+    margin-inline: -0.6rem;
+  }
+
+  .shelf li {
+    padding-inline: 0.4rem;
+  }
+
+  .shelf span {
+    font-size: 0.6rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .door,
+  .fr-foot,
+  .fridge[data-zoom="true"] .fr-body,
   .drawer,
   .drawer-bg {
     transition: none;
     animation: none;
   }
+
+  .fr-body {
+    opacity: 1;
+    transform: none;
+  }
+
+  .fridge[data-open="true"] .shelf li,
+  .fridge[data-open="true"] .mist,
+  .fridge[data-open="true"] .flake {
+    animation: none;
+  }
 }
 
-/* ---------- dashboard admin (/admin) ---------- */
 .adm-tabs {
   display: flex;
   gap: 0.4rem;
