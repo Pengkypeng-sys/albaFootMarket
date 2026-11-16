@@ -223,15 +223,17 @@ h2 {
 .search form {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
+  gap: 0.5rem;
   height: 48px;
-  padding-inline: 1.1rem;
+  padding-left: 1rem;
+  padding-right: 0.35rem;
   border: 1.5px solid var(--line);
   border-radius: 999px;
   background: #fff;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
   width: 100%;
   box-sizing: border-box;
+  position: relative;
 }
 
 .search form:focus-within {
@@ -254,6 +256,7 @@ h2 {
   color: var(--ink);
   font: inherit;
   font-size: 16px; /* Wajib 16px agar tidak auto-zoom di HP/iOS */
+  padding: 0;
 }
 
 .search input::placeholder {
@@ -264,13 +267,13 @@ h2 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   border: none;
   background: #ede9e3;
   color: #666;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   cursor: pointer;
   flex-shrink: 0;
   transition: background 0.12s ease, color 0.12s ease;
@@ -281,16 +284,200 @@ h2 {
   color: #111;
 }
 
+/* Garis pemisah antara input dan filter kategori di dalam kolom */
+.search-in-divider {
+  display: inline-block;
+  width: 1px;
+  height: 22px;
+  background: #e5ded5;
+  margin-inline: 0.25rem 0.15rem;
+  flex-shrink: 0;
+}
+
+/* Wrapper tombol filter di dalam kolom pencarian */
+.search-in-filter-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.search-in-filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  height: 38px;
+  padding: 0 0.75rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: #fdf6ec;
+  color: #8b3c0c;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.search-in-filter-btn:hover {
+  background: #f7ebd7;
+  color: #6d2c05;
+}
+
+.search-in-filter-btn[data-active="true"] {
+  background: var(--red);
+  color: #fff;
+}
+
+.search-in-filter-btn[data-active="true"] .search-in-chevron {
+  color: #fff;
+}
+
+.search-in-filter-icon {
+  font-size: 0.95em;
+  line-height: 1;
+}
+
+.search-in-filter-text {
+  max-width: 90px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.search-in-chevron {
+  color: #a45318;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.search-in-filter-btn[aria-expanded="true"] .search-in-chevron {
+  transform: rotate(180deg);
+}
+
+/* Menu Dropdown Kategori Mengambang (Floating Popover) */
+.search-in-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 100;
+  min-width: 195px;
+  max-width: 280px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.16), 0 4px 12px rgba(0, 0, 0, 0.06);
+  padding: 0.45rem;
+  animation: searchPop 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes searchPop {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.search-in-menu-header {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  padding: 0.35rem 0.65rem 0.25rem;
+}
+
+.search-in-menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 250px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.search-in-menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.48rem 0.68rem;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  font-size: 0.86rem;
+  font-weight: 500;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+.search-in-menu-item:hover {
+  background: var(--soft);
+  color: var(--red);
+}
+
+.search-in-menu-item[data-selected="true"] {
+  background: rgba(217, 7, 0, 0.08);
+  color: var(--red);
+  font-weight: 700;
+}
+
+.search-in-check {
+  color: var(--red);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
 /* Versi search besar di hero */
 .search-lg form {
   height: 52px;
-  padding-inline: 1.25rem;
+  padding-left: 1.15rem;
+  padding-right: 0.45rem;
   border-color: #ebd3b0;
   box-shadow: 0 6px 20px -8px rgba(92, 60, 20, 0.18);
 }
 
 .search-lg input {
   font-size: 16px; /* Tetap 16px untuk mobile safety */
+}
+
+.search-lg .search-in-filter-btn {
+  height: 40px;
+  padding: 0 0.85rem;
+  font-size: 0.86rem;
+}
+
+.search-lg .search-in-filter-text {
+  max-width: 130px;
+}
+
+@media (max-width: 480px) {
+  .search form {
+    padding-left: 0.85rem;
+    padding-right: 0.25rem;
+    gap: 0.35rem;
+  }
+
+  .search-in-filter-btn {
+    height: 34px;
+    padding: 0 0.55rem;
+    font-size: 0.78rem;
+  }
+
+  .search-in-filter-text {
+    max-width: 65px;
+  }
+
+  .search-in-divider {
+    margin-inline: 0.15rem 0.1rem;
+  }
 }
 
 /* Auto-suggest dropdown */
