@@ -25,10 +25,6 @@ export default function Home() {
           <div className="rise hero-search-wrap" style={rise(1)}>
             <SearchBox large />
           </div>
-          <div className="meta rise" style={rise(2)}>
-            <StatusBadge />
-            <span className="muted">{contact.hours.label}</span>
-          </div>
         </div>
         <div className="hero-media rise" style={rise(1)}>
           <Fridge />
@@ -63,7 +59,10 @@ export default function Home() {
       <section className="wrap" style={{ paddingBottom: "3rem" }}>
         <Reveal className="info">
           <div>
-            <h3>Jam buka</h3>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap", marginBottom: "0.25rem" }}>
+              <h3 style={{ margin: 0 }}>Jam buka</h3>
+              <StatusBadge />
+            </div>
             <p>{contact.hours.label}</p>
             <p className="muted">{contact.hours.closedNote}</p>
           </div>
