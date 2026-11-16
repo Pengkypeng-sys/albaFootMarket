@@ -1845,29 +1845,14 @@ main {
   position: absolute;
   inset: auto 0.85rem 0.8rem;
   z-index: 1;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 0.4rem;
+  display: block;
   color: #fff;
   font-size: 0.95rem;
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1.25;
   text-align: left;
-}
-
-.tile span::after {
-  content: "→";
-  flex: none;
-  display: grid;
-  place-items: center;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.92);
-  color: var(--red);
-  font-size: 0.85rem;
-  transition: transform 0.3s, background 0.3s, color 0.3s;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+  transition: transform 0.2s ease;
 }
 
 .tile:active {
@@ -1899,10 +1884,8 @@ main {
     transform: scale(1.09);
   }
 
-  .tile:hover span::after {
-    transform: translateX(3px);
-    background: var(--red);
-    color: #fff;
+  .tile:hover span {
+    transform: translateY(-2px);
   }
 
   .card-photo:hover {
@@ -1933,12 +1916,6 @@ main {
   .tile span {
     inset-inline: 0.65rem;
     font-size: 0.82rem;
-  }
-
-  .tile span::after {
-    width: 22px;
-    height: 22px;
-    font-size: 0.75rem;
   }
 
   .float-card {

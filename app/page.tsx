@@ -52,7 +52,6 @@ export default function Home() {
       <section className="wrap section">
         <div className="head">
           <h2>Produk</h2>
-          <Link href="/produk">Lihat semua →</Link>
         </div>
         <div className="grid">
           {featured.map((p, i) => (
