@@ -8,10 +8,7 @@ export const metadata: Metadata = {
 
 export default function AdminPage() {
   return (
-    <section className="wrap section">
-      <div className="head">
-        <h1>Dashboard</h1>
-      </div>
+    <section className="wrap section" style={{ paddingTop: "1rem" }}>
       <Admin />
     </section>
   );

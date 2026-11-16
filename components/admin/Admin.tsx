@@ -29,88 +29,142 @@ export function Admin() {
   const { sales, stock, ready, record, remove, setStockOf } = useSales();
   const [tab, setTab] = useState<Tab>("overview");
   const [shown, setShown] = useState<Sale | null>(null);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   if (!auth.ready || !ready) return <p className="fine">Memuat…</p>;
   if (!auth.isAuth) return <AdminLogin />;
 
+  const currentTab = tabs.find((t) => t.id === tab) || tabs[0];
+
   return (
-    <div className="adm">
-      {/* Topbar Dashboard Profesional */}
-      <div className="adm-topbar">
-        <div className="adm-brand-cell">
+    <div className="adm-layout">
+      {/* Sidebar Navigasi di Sebelah Kiri */}
+      <aside className={`adm-sidebar ${mobileNavOpen ? "adm-sidebar-open" : ""}`} aria-label="Menu Dashboard">
+        <div className="adm-sidebar-brand">
           <div className="adm-brand-avatar">🏪</div>
-          <div>
-            <h2 className="adm-brand-title">Alba Food Market</h2>
+          <div className="adm-brand-meta">
+            <h2 className="adm-brand-title">Alba Market</h2>
             <div className="adm-user-info">
               <span className="adm-user-dot" />
-              <span>Portal Pemilik Toko · Online</span>
+              <span>Portal Pemilik · Online</span>
             </div>
           </div>
+          <button
+            type="button"
+            className="adm-sidebar-close"
+            onClick={() => setMobileNavOpen(false)}
+            aria-label="Tutup Menu"
+          >
+            ✕
+          </button>
         </div>
 
-        <div className="adm-user-actions">
-          <Link href="/" target="_blank" className="adm-btn-text" title="Buka website toko">
-            ↗ Buka Toko
+        <nav className="adm-sidebar-nav">
+          <div className="adm-sidebar-section-title">MENU UTAMA</div>
+          {tabs.map((t) => (
+            <button
+              key={t.id}
+              type="button"
+              className={`adm-side-btn ${tab === t.id ? "adm-side-btn-active" : ""}`}
+              onClick={() => {
+                setTab(t.id);
+                setMobileNavOpen(false);
+              }}
+            >
+              <span className="adm-side-icon">{t.icon}</span>
+              <span className="adm-side-label">{t.label}</span>
+              {t.id === "kasir" && <span className="adm-side-badge">POS</span>}
+              {t.id === "products" && <span className="adm-side-badge">Foto</span>}
+            </button>
+          ))}
+        </nav>
+
+        <div className="adm-sidebar-footer">
+          <Link href="/" target="_blank" className="adm-side-foot-link" title="Buka website toko">
+            <span>↗</span>
+            <span>Buka Website Toko</span>
           </Link>
           <button
             type="button"
-            className="adm-btn-text adm-btn-logout"
+            className="adm-side-logout"
             onClick={auth.logout}
             title="Keluar dari sesi dashboard"
           >
-            🚪 Keluar
+            <span>🚪</span>
+            <span>Keluar Akun</span>
           </button>
         </div>
-      </div>
+      </aside>
 
-      {/* Navigasi Tab Dashboard */}
-      <div className="adm-tabs" role="tablist" aria-label="Menu Dashboard">
-        {tabs.map((t) => (
-          <button
-            key={t.id}
-            type="button"
-            role="tab"
-            aria-selected={tab === t.id}
-            onClick={() => setTab(t.id)}
-            className="adm-tab-btn"
-          >
-            <span className="adm-tab-icon">{t.icon}</span>
-            <span>{t.label}</span>
-          </button>
-        ))}
-      </div>
-
-      {/* Konten Setiap Tab */}
-      {tab === "overview" ? (
-        <DashboardOverview
-          sales={sales}
-          stock={stock}
-          onOpenReceipt={setShown}
-          onSwitchTab={(target) => setTab(target as Tab)}
+      {/* Backdrop untuk Mobile drawer */}
+      {mobileNavOpen && (
+        <div
+          className="adm-sidebar-backdrop"
+          onClick={() => setMobileNavOpen(false)}
+          aria-hidden="true"
         />
-      ) : null}
+      )}
 
-      {tab === "products" ? <ProductManager /> : null}
+      {/* Konten Utama di Sebelah Kanan */}
+      <main className="adm-main-content">
+        <header className="adm-content-header">
+          <div className="adm-header-left">
+            <button
+              type="button"
+              className="adm-mobile-hamburger"
+              onClick={() => setMobileNavOpen(true)}
+              aria-label="Buka Menu Navigasi"
+            >
+              ☰ <span>Menu</span>
+            </button>
+            <div>
+              <div className="adm-header-crumb">Dashboard Pemilik Toko</div>
+              <h1 className="adm-header-title">
+                {currentTab.icon} {currentTab.label}
+              </h1>
+            </div>
+          </div>
+          <div className="adm-header-right">
+            <div className="adm-status-chip">
+              <span className="adm-user-dot" />
+              <span>Pemilik Toko</span>
+            </div>
+          </div>
+        </header>
 
-      {tab === "kasir" ? (
-        <Kasir
-          stock={stock}
-          onSave={(s) => setShown(record(s))}
-          onQuickOverview={() => setTab("overview")}
-        />
-      ) : null}
+        <div className="adm-tab-panel">
+          {tab === "overview" ? (
+            <DashboardOverview
+              sales={sales}
+              stock={stock}
+              onOpenReceipt={setShown}
+              onSwitchTab={(target) => setTab(target as Tab)}
+            />
+          ) : null}
 
-      {tab === "terjual" ? (
-        <Terjual sales={sales} onOpen={setShown} onRemove={remove} />
-      ) : null}
+          {tab === "products" ? <ProductManager /> : null}
 
-      {tab === "stok" ? (
-        <Stok stock={stock} sales={sales} onSet={setStockOf} />
-      ) : null}
+          {tab === "kasir" ? (
+            <Kasir
+              stock={stock}
+              onSave={(s) => setShown(record(s))}
+              onQuickOverview={() => setTab("overview")}
+            />
+          ) : null}
 
-      {tab === "settings" ? (
-        <SettingsView auth={auth} sales={sales} stock={stock} />
-      ) : null}
+          {tab === "terjual" ? (
+            <Terjual sales={sales} onOpen={setShown} onRemove={remove} />
+          ) : null}
+
+          {tab === "stok" ? (
+            <Stok stock={stock} sales={sales} onSet={setStockOf} />
+          ) : null}
+
+          {tab === "settings" ? (
+            <SettingsView auth={auth} sales={sales} stock={stock} />
+          ) : null}
+        </div>
+      </main>
 
       {/* Pop-up Kuitansi */}
       {shown ? <Receipt sale={shown} onClose={() => setShown(null)} /> : null}
