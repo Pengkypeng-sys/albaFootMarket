@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { Fridge } from "@/components/Fridge";
+import { ProductBanner } from "@/components/ProductBanner";
 import { ProductCard } from "@/components/ProductCard";
 import { Rail } from "@/components/Rail";
 import { Reveal } from "@/components/Reveal";
 import { SearchBox } from "@/components/SearchBox";
-import { StatusBadge } from "@/components/StatusBadge";
 import { categories, featured, products, thumb } from "@/data/products";
 import { contact, waLink } from "@/lib/brand";
 
@@ -57,38 +57,8 @@ export default function Home() {
       </section>
 
       <section className="wrap home-end">
-        <Reveal className="info">
-          <div>
-            <div className="info-head">
-              <h3>Jam buka</h3>
-              <StatusBadge />
-            </div>
-            <p>{contact.hours.label}</p>
-            <p className="muted">{contact.hours.closedNote}</p>
-          </div>
-          <div>
-            <h3>Alamat</h3>
-            <p>{contact.addressShort}</p>
-            <p>
-              <Link href="/lokasi" style={{ color: "var(--red)" }}>Peta &amp; rute →</Link>
-            </p>
-          </div>
-          <div>
-            <h3>Layanan</h3>
-            <ul className="pills">
-              {contact.services.map((s) => (
-                <li key={s}>{s}</li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h3>Pembayaran</h3>
-            <ul className="pills">
-              {contact.payments.map((s) => (
-                <li key={s}>{s}</li>
-              ))}
-            </ul>
-          </div>
+        <Reveal>
+          <ProductBanner />
         </Reveal>
         <Reveal className="cta">
           <h2>Pesan via WhatsApp</h2>
