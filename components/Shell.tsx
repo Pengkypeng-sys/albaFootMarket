@@ -112,6 +112,11 @@ export function Shell({ children }: { children: React.ReactNode }) {
               <li><Link href="/produk">Produk</Link></li>
               <li><Link href="/lokasi">Lokasi</Link></li>
               <li><Link href="/keranjang">Keranjang</Link></li>
+              <li>
+                <Link href="/admin" style={{ color: "var(--red)", fontWeight: 600 }}>
+                  Login Pemilik / Kasir
+                </Link>
+              </li>
             </ul>
           </div>
           <div>

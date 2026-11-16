@@ -765,6 +765,101 @@ h2 {
   font-weight: 600;
 }
 
+.card-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+  margin-top: 0.45rem;
+  font-size: 0.76rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.card-sold {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  color: #c2410c;
+  background: #fff4ed;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  border: 1px solid #fed7aa;
+  white-space: nowrap;
+}
+
+.card-stock {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  color: #15803d;
+  background: #f0fdf4;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  border: 1px solid #bbf7d0;
+  white-space: nowrap;
+}
+
+.card-stock[data-low="true"] {
+  color: #b91c1c;
+  background: #fef2f2;
+  border-color: #fecaca;
+  font-weight: 700;
+}
+
+.card-stock[data-empty="true"] {
+  color: #6b7280;
+  background: #f3f4f6;
+  border-color: #e5e7eb;
+}
+
+.detail-meta-badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.6rem 0 1rem;
+}
+
+.detail-sold-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  background: #fff4ed;
+  border: 1px solid #fed7aa;
+  color: #c2410c;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.detail-stock-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #15803d;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.detail-stock-badge[data-low="true"] {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #dc2626;
+  font-weight: 700;
+}
+
+.detail-stock-badge[data-empty="true"] {
+  background: #f3f4f6;
+  border-color: #e5e7eb;
+  color: #6b7280;
+}
+
 .card .btn,
 .card .qty {
   align-self: stretch;
@@ -3256,6 +3351,179 @@ main {
   .fridge[data-open="true"] .flake {
     animation: none;
   }
+}
+
+/* ---------- login admin & topbar ---------- */
+.adm-login-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 52vh;
+  padding: 1.5rem 0;
+}
+
+.adm-login-card {
+  width: min(100%, 420px);
+  padding: clamp(1.8rem, 4vw, 2.4rem);
+  border: 1.5px solid var(--line);
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08);
+}
+
+.adm-login-head {
+  text-align: center;
+  margin-bottom: 1.6rem;
+}
+
+.adm-login-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.8rem;
+  border-radius: 999px;
+  background: #ffe9e6;
+  color: var(--red);
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-bottom: 0.8rem;
+}
+
+.adm-login-head h2 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin: 0 0 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.adm-login-head p {
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.adm-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.adm-input-eye {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.adm-input-eye input {
+  width: 100%;
+  padding-right: 44px;
+}
+
+.adm-eye-btn {
+  position: absolute;
+  right: 8px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-size: 1.1rem;
+  padding: 6px;
+  border-radius: 6px;
+}
+
+.adm-login-error {
+  color: var(--red);
+  font-size: 0.84rem;
+  font-weight: 600;
+  margin: -0.3rem 0 0;
+  padding: 0.4rem 0.6rem;
+  background: #fff0f0;
+  border-radius: 8px;
+}
+
+.adm-login-hint {
+  padding: 0.65rem 0.9rem;
+  background: #faf7f2;
+  border-radius: 12px;
+  border: 1px dashed var(--line);
+  color: #5c4a3e;
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.adm-login-hint code {
+  background: #fff;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  border: 1px solid var(--line);
+  font-weight: 700;
+  color: var(--red);
+}
+
+.adm-login-foot {
+  text-align: center;
+  margin-top: 1.4rem;
+}
+
+/* top bar status admin */
+.adm-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-bottom: 1.2rem;
+  padding: 0.75rem 1.1rem;
+  background: #fff;
+  border: 1.5px solid var(--line);
+  border-radius: 16px;
+}
+
+.adm-user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.adm-user-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+}
+
+.adm-user-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.adm-btn-text {
+  border: 0;
+  background: #faf7f2;
+  border-radius: 8px;
+  padding: 0.35rem 0.75rem;
+  color: var(--ink);
+  font: 600 0.82rem var(--font);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.adm-btn-text:hover {
+  background: #eee6db;
+}
+
+.adm-btn-logout {
+  color: var(--red);
+  background: #fff0f0;
+}
+
+.adm-btn-logout:hover {
+  background: #ffe0e0;
 }
 
 .adm-tabs {

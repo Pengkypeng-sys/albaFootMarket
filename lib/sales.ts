@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { products } from "@/data/products";
 
 export type SaleItem = { slug: string; name: string; pack?: string; qty: number; price: number };
 export type Sale = {
@@ -20,7 +21,13 @@ const SALES_KEY = "alba-sales-v1";
 const STOCK_KEY = "alba-stock-v1";
 export const LOW_STOCK = 5;
 
+export const DEFAULT_ADMIN_PASS = "alba123";
+export const DEFAULT_ADMIN_PIN = "123456";
+const AUTH_KEY = "alba-auth-session";
+const PASS_KEY = "alba-admin-pass";
+
 function load<T>(key: string, fallback: T): T {
+  if (typeof window === "undefined") return fallback;
   try {
     const raw = localStorage.getItem(key);
     return raw ? (JSON.parse(raw) as T) : fallback;
@@ -43,6 +50,12 @@ function nextId(sales: Sale[], now: Date): string {
   return prefix + String(last + 1).padStart(3, "0");
 }
 
+function notifyUpdated() {
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new Event("alba:data-updated"));
+  }
+}
+
 /** Penjualan dan stok, disimpan di localStorage perangkat ini saja. */
 export function useSales() {
   const [sales, setSales] = useState<Sale[]>([]);
@@ -50,15 +63,34 @@ export function useSales() {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
+    // Jika belum ada stok tersimpan, inisialisasi dari daftar katalog produk default
+    const savedStock = load<Stock | null>(STOCK_KEY, null);
+    if (!savedStock) {
+      const initialStock: Stock = {};
+      for (const p of products) {
+        if (p.stock !== undefined) initialStock[p.slug] = p.stock;
+      }
+      setStock(initialStock);
+      localStorage.setItem(STOCK_KEY, JSON.stringify(initialStock));
+    } else {
+      setStock(savedStock);
+    }
     setSales(load<Sale[]>(SALES_KEY, []));
-    setStock(load<Stock>(STOCK_KEY, {}));
     setReady(true);
   }, []);
+
   useEffect(() => {
-    if (ready) localStorage.setItem(SALES_KEY, JSON.stringify(sales));
+    if (ready) {
+      localStorage.setItem(SALES_KEY, JSON.stringify(sales));
+      notifyUpdated();
+    }
   }, [sales, ready]);
+
   useEffect(() => {
-    if (ready) localStorage.setItem(STOCK_KEY, JSON.stringify(stock));
+    if (ready) {
+      localStorage.setItem(STOCK_KEY, JSON.stringify(stock));
+      notifyUpdated();
+    }
   }, [stock, ready]);
 
   /** Simpan transaksi dan kurangi stok produk yang stoknya dicatat. */
@@ -102,4 +134,86 @@ export function useSales() {
   }, []);
 
   return { sales, stock, ready, record, remove, setStockOf };
+}
+
+/** Hook untuk menampilkan stok dan jumlah terjual secara live di tampilan website */
+export function useLiveProductMeta(slug: string, baseStock = 20, baseSold = 100) {
+  const [stock, setStock] = useState<number>(baseStock);
+  const [sold, setSold] = useState<number>(baseSold);
+
+  const compute = useCallback(() => {
+    const st = load<Stock>(STOCK_KEY, {});
+    const sl = load<Sale[]>(SALES_KEY, []);
+
+    // Hitung stok live
+    const liveStock = st[slug] !== undefined ? st[slug] : baseStock;
+    setStock(liveStock);
+
+    // Hitung terjual: baseSold + total qty terjual dari transaksi yang dicatat
+    const addSold = sl.reduce((sum, sale) => {
+      const it = sale.items.find((i) => i.slug === slug);
+      return sum + (it ? it.qty : 0);
+    }, 0);
+    setSold(baseSold + addSold);
+  }, [slug, baseStock, baseSold]);
+
+  useEffect(() => {
+    compute();
+    const handleUpdate = () => compute();
+    window.addEventListener("alba:data-updated", handleUpdate);
+    window.addEventListener("storage", handleUpdate);
+    return () => {
+      window.removeEventListener("alba:data-updated", handleUpdate);
+      window.removeEventListener("storage", handleUpdate);
+    };
+  }, [compute]);
+
+  return {
+    stock,
+    sold,
+    isLowStock: stock <= LOW_STOCK && stock > 0,
+    isOutOfStock: stock <= 0,
+  };
+}
+
+/** Hook autentikasi login pemilik toko untuk Dashboard */
+export function useAdminAuth() {
+  const [isAuth, setIsAuth] = useState(false);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    const session = localStorage.getItem(AUTH_KEY);
+    setIsAuth(session === "logged_in");
+    setReady(true);
+  }, []);
+
+  const login = useCallback((passInput: string) => {
+    const customPass = localStorage.getItem(PASS_KEY);
+    const valid =
+      passInput.trim() === DEFAULT_ADMIN_PASS ||
+      passInput.trim() === DEFAULT_ADMIN_PIN ||
+      (customPass && passInput.trim() === customPass);
+
+    if (valid) {
+      localStorage.setItem(AUTH_KEY, "logged_in");
+      setIsAuth(true);
+      return true;
+    }
+    return false;
+  }, []);
+
+  const logout = useCallback(() => {
+    localStorage.removeItem(AUTH_KEY);
+    setIsAuth(false);
+  }, []);
+
+  const changePassword = useCallback((newPass: string) => {
+    if (newPass.trim().length >= 4) {
+      localStorage.setItem(PASS_KEY, newPass.trim());
+      return true;
+    }
+    return false;
+  }, []);
+
+  return { isAuth, ready, login, logout, changePassword };
 }

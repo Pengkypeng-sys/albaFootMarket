@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { formatRp, thumb, type Product } from "@/data/products";
 import { useCart } from "@/lib/cart";
+import { useLiveProductMeta } from "@/lib/sales";
 import { useReveal } from "./Reveal";
 import { flyToCart } from "@/lib/fly";
 import { Stepper } from "./Stepper";
@@ -11,6 +12,11 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
   const { lines, add, setQty } = useCart();
   const qty = lines.find((l) => l.slug === product.slug)?.qty ?? 0;
   const ref = useReveal<HTMLElement>();
+  const { stock, sold, isLowStock, isOutOfStock } = useLiveProductMeta(
+    product.slug,
+    product.stock ?? 25,
+    product.sold ?? 120,
+  );
 
   return (
     <article
@@ -62,6 +68,19 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
             <span className="card-ask">Tanya harga</span>
           )}
         </div>
+        <div className="card-meta-row">
+          <span className="card-sold" title="Total produk terjual">
+            🔥 {sold}+ terjual
+          </span>
+          <span
+            className="card-stock"
+            data-low={isLowStock}
+            data-empty={isOutOfStock}
+            title="Stok tersedia di toko"
+          >
+            {isOutOfStock ? "Habis" : isLowStock ? `Sisa ${stock}!` : `Stok: ${stock}`}
+          </span>
+        </div>
       </div>
       {qty > 0 ? (
         <Stepper qty={qty} onChange={(q) => setQty(product.slug, q)} />
@@ -69,12 +88,14 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
         <button
           className="btn btn-red"
           type="button"
+          disabled={isOutOfStock}
           onClick={() => {
+            if (isOutOfStock) return;
             add(product.slug);
             flyToCart(ref.current?.querySelector("img") ?? null);
           }}
         >
-          Tambah
+          {isOutOfStock ? "Stok Habis" : "Tambah"}
         </button>
       )}
     </article>

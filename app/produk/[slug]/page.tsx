@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { AddBox } from "@/components/AddBox";
 import { Gallery } from "@/components/Gallery";
 import { ProductCard } from "@/components/ProductCard";
+import { ProductMetaBadges } from "@/components/ProductMetaBadges";
 import { categories, formatRp, getProduct, products } from "@/data/products";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -52,6 +53,11 @@ export default async function ProductPage({ params }: Props) {
         <div className="detail-info">
           <span className="cat-pill">{categories.find((c) => c.id === product.category)?.label}</span>
           <h1>{product.name}</h1>
+          <ProductMetaBadges
+            slug={product.slug}
+            baseStock={product.stock ?? 25}
+            baseSold={product.sold ?? 120}
+          />
           <p className="lede">{product.summary}</p>
           {product.flavor ? (
             <p className="flavor">

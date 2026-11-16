@@ -2,7 +2,8 @@
 
 import { useMemo, useState } from "react";
 import { formatRp, products } from "@/data/products";
-import { dayKey, LOW_STOCK, saleTotal, useSales, type Sale, type SaleItem } from "@/lib/sales";
+import { dayKey, LOW_STOCK, saleTotal, useAdminAuth, useSales, type Sale, type SaleItem } from "@/lib/sales";
+import { AdminLogin } from "./AdminLogin";
 import { formatWaktu, Receipt } from "./Receipt";
 
 type Tab = "kasir" | "terjual" | "stok";
@@ -16,13 +17,45 @@ const priced = products.filter((p) => p.price);
 
 /** Dashboard pemilik: kasir + kuitansi, daftar terjual, daftar stok. Data hanya di perangkat ini. */
 export function Admin() {
+  const auth = useAdminAuth();
   const { sales, stock, ready, record, remove, setStockOf } = useSales();
   const [tab, setTab] = useState<Tab>("kasir");
   const [shown, setShown] = useState<Sale | null>(null);
 
-  if (!ready) return <p className="fine">Memuat…</p>;
+  if (!auth.ready || !ready) return <p className="fine">Memuat…</p>;
+  if (!auth.isAuth) return <AdminLogin />;
+
   return (
     <div className="adm">
+      <div className="adm-topbar">
+        <div className="adm-user-info">
+          <span className="adm-user-dot" />
+          <span>Pemilik Toko (Online)</span>
+        </div>
+        <div className="adm-user-actions">
+          <button
+            type="button"
+            className="adm-btn-text"
+            onClick={() => {
+              const np = prompt("Masukkan password baru (minimal 4 karakter):");
+              if (np) {
+                if (auth.changePassword(np)) alert("Password berhasil diubah!");
+                else alert("Password minimal 4 karakter.");
+              }
+            }}
+          >
+            🔑 Ubah Password
+          </button>
+          <button
+            type="button"
+            className="adm-btn-text adm-btn-logout"
+            onClick={auth.logout}
+          >
+            🚪 Keluar (Logout)
+          </button>
+        </div>
+      </div>
+
       <div className="adm-tabs" role="tablist" aria-label="Dashboard">
         {tabs.map((t) => (
           <button key={t.id} type="button" role="tab" aria-selected={tab === t.id} onClick={() => setTab(t.id)}>

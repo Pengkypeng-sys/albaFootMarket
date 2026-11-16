@@ -43,6 +43,10 @@ export type Product = {
   imageAlt: string;
   /** Foto tambahan untuk halaman detail; foto utama selalu pertama. */
   more?: Shot[];
+  /** Jumlah stok tersedia */
+  stock?: number;
+  /** Jumlah terjual */
+  sold?: number;
 };
 
 // Foto: Wikimedia Commons, lisensi di public/products/ATRIBUSI.md.
@@ -75,6 +79,8 @@ export const categories: { id: CategoryId | "semua"; label: string }[] = [
 export const products: Product[] = [
   {
     slug: "kulit-sambosa-large",
+    stock: 35,
+    sold: 240,
     name: "Kulit Sambosa Large",
     category: "kulit",
     pack: "Isi 50",
@@ -87,6 +93,8 @@ export const products: Product[] = [
   },
   {
     slug: "kulit-sambosa-medium",
+    stock: 42,
+    sold: 185,
     name: "Kulit Sambosa Medium",
     category: "kulit",
     pack: "Isi 50",
@@ -98,6 +106,8 @@ export const products: Product[] = [
   },
   {
     slug: "kulit-sambosa-small",
+    stock: 28,
+    sold: 160,
     name: "Kulit Sambosa Small",
     category: "kulit",
     pack: "Isi 50 (2 pack @ 25 lembar)",
@@ -109,6 +119,8 @@ export const products: Product[] = [
   },
   {
     slug: "sambosa-daging",
+    stock: 25,
+    sold: 320,
     name: "Sambosa Daging",
     category: "sambosa",
     pack: "Isi 10",
@@ -122,6 +134,8 @@ export const products: Product[] = [
   },
   {
     slug: "sambosa-daging-asap",
+    stock: 18,
+    sold: 140,
     name: "Sambosa Daging Asap",
     category: "sambosa",
     pack: "Isi 10",
@@ -134,6 +148,8 @@ export const products: Product[] = [
   },
   {
     slug: "sambosa-ayam",
+    stock: 20,
+    sold: 165,
     name: "Sambosa Ayam",
     category: "sambosa",
     pack: "Isi 10",
@@ -146,6 +162,8 @@ export const products: Product[] = [
   },
   {
     slug: "sambosa-sayur",
+    stock: 15,
+    sold: 95,
     name: "Sambosa Sayur",
     category: "sambosa",
     pack: "Isi 10",
@@ -158,6 +176,8 @@ export const products: Product[] = [
   },
   {
     slug: "sambosa-coklat",
+    stock: 22,
+    sold: 130,
     name: "Sambosa Coklat",
     category: "sambosa",
     pack: "Isi 10",
@@ -170,6 +190,8 @@ export const products: Product[] = [
   },
   {
     slug: "sambosa-mozarella",
+    stock: 16,
+    sold: 210,
     name: "Sambosa Mozarella",
     category: "sambosa",
     pack: "Isi 10",
@@ -182,6 +204,8 @@ export const products: Product[] = [
   },
   {
     slug: "kebab-daging",
+    stock: 24,
+    sold: 290,
     name: "Kebab Daging",
     category: "kebab",
     pack: "Isi 6",
@@ -195,6 +219,8 @@ export const products: Product[] = [
   },
   {
     slug: "kebab-daging-mozarella",
+    stock: 18,
+    sold: 220,
     name: "Kebab Daging Mozarella",
     category: "kebab",
     pack: "Isi 6",
@@ -207,6 +233,8 @@ export const products: Product[] = [
   },
   {
     slug: "roti-canai-original",
+    stock: 30,
+    sold: 240,
     name: "Roti Canai Original",
     category: "canai",
     pack: "Isi 5",
@@ -220,6 +248,8 @@ export const products: Product[] = [
   },
   {
     slug: "roti-canai-susu",
+    stock: 25,
+    sold: 180,
     name: "Roti Canai Susu",
     category: "canai",
     pack: "Isi 5",
@@ -232,6 +262,8 @@ export const products: Product[] = [
   },
   {
     slug: "onde-onde",
+    stock: 20,
+    sold: 195,
     name: "Onde-onde Frozen",
     category: "onde",
     pack: "Isi 10",
@@ -245,6 +277,8 @@ export const products: Product[] = [
   },
   {
     slug: "teh-rempah-adheni",
+    stock: 14,
+    sold: 85,
     name: "Teh Rempah Adheni Tea",
     category: "minuman",
     pack: "200 ml",
@@ -257,6 +291,8 @@ export const products: Product[] = [
   },
   {
     slug: "susu-kurma",
+    stock: 12,
+    sold: 110,
     name: "Susu Kurma",
     category: "minuman",
     pack: "200 ml",
@@ -269,6 +305,8 @@ export const products: Product[] = [
   },
   {
     slug: "kopi-susu-aren",
+    stock: 15,
+    sold: 95,
     name: "Kopi Susu Aren",
     category: "minuman",
     pack: "200 ml",
@@ -281,6 +319,8 @@ export const products: Product[] = [
   },
   {
     slug: "banana-choco-milk",
+    stock: 10,
+    sold: 75,
     name: "Banana Choco Milk",
     category: "minuman",
     pack: "200 ml",
@@ -293,6 +333,8 @@ export const products: Product[] = [
   },
   {
     slug: "aneka-camilan",
+    stock: 30,
+    sold: 170,
     name: "Aneka Camilan",
     category: "camilan",
     summary: "Camilan gurih untuk teman santai.",
@@ -303,6 +345,8 @@ export const products: Product[] = [
   },
   {
     slug: "kurma",
+    stock: 40,
+    sold: 265,
     name: "Kurma",
     category: "kurma",
     summary: "Kurma manis alami. Cocok untuk berbuka.",
@@ -313,6 +357,8 @@ export const products: Product[] = [
   },
   {
     slug: "bumbu-masak",
+    stock: 25,
+    sold: 145,
     name: "Aneka Bumbu Masak",
     category: "bumbu",
     summary: "Bumbu dan rempah untuk masakan harian.",
@@ -323,6 +369,8 @@ export const products: Product[] = [
   },
   {
     slug: "po-ramadan",
+    stock: 50,
+    sold: 65,
     name: "Pre-order Ramadan",
     category: "po",
     summary: "Pesan lebih awal untuk Ramadan.",
