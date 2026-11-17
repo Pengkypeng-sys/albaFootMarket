@@ -1,14 +1,10 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import { AddBox } from "@/components/AddBox";
-import { Gallery } from "@/components/Gallery";
-import { ProductCard } from "@/components/ProductCard";
-import { ProductMetaBadges } from "@/components/ProductMetaBadges";
-import { categories, formatRp, getCategoryVariants, getProduct, products } from "@/data/products";
+import { ProductDetail } from "@/components/ProductDetail";
+import { getProduct, products } from "@/data/products";
 
 type Props = { params: Promise<{ slug: string }> };
 
+/** Produk bawaan dirender statis untuk SEO; slug hasil tambahan dashboard dirender saat diminta dan dibaca dari katalog di perangkat. */
 export function generateStaticParams() {
   return products.map((p) => ({ slug: p.slug }));
 }
@@ -28,94 +24,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ProductPage({ params }: Props) {
   const { slug } = await params;
   const product = getProduct(slug);
-  if (!product) notFound();
-  const variants = getCategoryVariants(product.category);
-  const related = products.filter((p) => p.slug !== product.slug).slice(0, 4);
-
-  const jsonLd = {
+  const jsonLd = product && {
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.name,
     description: product.summary,
     image: product.image,
-    ...(product.price
-      ? { offers: { "@type": "Offer", priceCurrency: "IDR", price: product.price } }
-      : {}),
+    ...(product.price ? { offers: { "@type": "Offer", priceCurrency: "IDR", price: product.price } } : {}),
   };
 
   return (
-    <article className="wrap">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <Link className="crumb" href="/produk" style={{ display: "inline-block" }}>
-        ← Semua Produk
-      </Link>
-      <div className="detail" data-cat={product.category}>
-        <Gallery product={product} />
-        <div className="detail-info">
-          <span className="cat-pill">{categories.find((c) => c.id === product.category)?.label}</span>
-          <h1>{product.name}</h1>
-          <ProductMetaBadges
-            slug={product.slug}
-            baseStock={product.stock ?? 25}
-            baseSold={product.sold ?? 120}
-          />
-          <p className="lede">{product.summary}</p>
-          {product.flavor ? (
-            <p className="flavor">
-              <span>Rasa</span>
-              <b>{product.flavor}</b>
-            </p>
-          ) : null}
-          {variants.length > 1 ? (
-            <div className="variant-block">
-              <span className="variant-block-label">
-                Pilih Varian / Rasa:
-              </span>
-              <div className="variant-pill-list">
-                {variants.map((v) => {
-                  const isActive = v.slug === product.slug;
-                  const label = v.flavor || v.pack || v.name;
-                  return (
-                    <Link
-                      key={v.slug}
-                      href={`/produk/${v.slug}`}
-                      className="variant-pill"
-                      data-active={isActive}
-                      scroll={false}
-                    >
-                      <span className="variant-pill-name">{label}</span>
-                      {v.price ? <small className="variant-pill-price">{formatRp(v.price)}</small> : null}
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-          ) : null}
-          <div className="price-box">
-            {product.price ? (
-              <>
-                <span>Harga</span>
-                <p className="price">{formatRp(product.price)}</p>
-              </>
-            ) : (
-              <p className="fine">Harga: tanya via WhatsApp.</p>
-            )}
-            {product.pack ? <b className="pack-pill">{product.pack}</b> : null}
-          </div>
-          {product.preorder ? <p className="fine">Pre-order. Jadwal dikonfirmasi admin.</p> : null}
-          <AddBox slug={product.slug} name={product.name} preorder={product.preorder} />
-        </div>
-      </div>
-      <section className="section" style={{ paddingTop: 0 }}>
-        <div className="head">
-          <h2>Lainnya</h2>
-        </div>
-        <div className="grid">
-          {related.map((p) => (
-            <ProductCard key={p.slug} product={p} />
-          ))}
-        </div>
-      </section>
-    </article>
+    <>
+      {jsonLd ? <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} /> : null}
+      <ProductDetail slug={slug} />
+    </>
   );
 }

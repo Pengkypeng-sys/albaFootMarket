@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { formatRp, getProduct } from "@/data/products";
+import { formatRp } from "@/data/products";
+import { useCatalog } from "@/lib/catalog";
 import { waLink } from "@/lib/brand";
 
 interface BannerSlide {
@@ -60,6 +61,7 @@ const slides: BannerSlide[] = [
 ];
 
 export function ProductBanner() {
+  const { getProduct } = useCatalog();
   const [activeIdx, setActiveIdx] = useState(0);
   const [paused, setPaused] = useState(false);
   const touchStartX = useRef<number | null>(null);

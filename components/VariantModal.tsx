@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { formatRp, thumb, type Product } from "@/data/products";
-import { useLiveProductMeta } from "@/lib/sales";
+import { useSales } from "@/lib/sales";
 import { Stepper } from "./Stepper";
 
 export function VariantModal({
@@ -38,11 +38,7 @@ export function VariantModal({
   }, [isOpen, onClose]);
 
   const selectedProduct = variants.find((v) => v.slug === selectedSlug) || initialProduct;
-  const { stock, sold, isLowStock, isOutOfStock } = useLiveProductMeta(
-    selectedProduct.slug,
-    selectedProduct.stock ?? 25,
-    selectedProduct.sold ?? 120,
-  );
+  const { stock, sold, max, isLowStock, isOutOfStock } = useSales().metaOf(selectedProduct.slug);
 
   if (!isOpen) return null;
 
@@ -140,7 +136,7 @@ export function VariantModal({
         {/* Atur Jumlah Beli */}
         <div className="vmodal-qty-row">
           <span className="vmodal-qty-label">Jumlah:</span>
-          <Stepper qty={qty} min={1} max={stock > 0 ? stock : 99} onChange={setQty} />
+          <Stepper qty={qty} min={1} max={max ?? 99} onChange={setQty} />
         </div>
 
         {/* Tombol Konfirmasi Tambah */}

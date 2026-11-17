@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { Fridge } from "@/components/Fridge";
 import { ProductBanner } from "@/components/ProductBanner";
-import { ProductCard } from "@/components/ProductCard";
+import { FeaturedGrid } from "@/components/FeaturedGrid";
 import { Rail } from "@/components/Rail";
 import { Reveal } from "@/components/Reveal";
 import { SearchBox } from "@/components/SearchBox";
 import { StatusBadge } from "@/components/StatusBadge";
-import { categories, featured, products, thumb } from "@/data/products";
+import { categories, products, thumb } from "@/data/products";
 import { contact, waLink } from "@/lib/brand";
 
 const tiles = categories
@@ -50,11 +50,7 @@ export default function Home() {
         <div className="head">
           <h2>Produk</h2>
         </div>
-        <div className="grid">
-          {featured.map((p, i) => (
-            <ProductCard key={p.slug} product={p} index={i} />
-          ))}
-        </div>
+        <FeaturedGrid />
       </section>
 
       <section className="wrap home-end">

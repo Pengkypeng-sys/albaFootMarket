@@ -1,23 +1,24 @@
 "use client";
 
 import { useMemo } from "react";
-import { formatRp, products, thumb } from "@/data/products";
-import { dayKey, LOW_STOCK, type Sale, type Stock } from "@/lib/sales";
+import { formatRp, thumb } from "@/data/products";
+import { useCatalog } from "@/lib/catalog";
+import { dayKey, LOW_STOCK, useSales, type Sale } from "@/lib/sales";
 import { formatWaktu } from "./Receipt";
-
-const priced = products.filter((p) => p.price);
 
 export function DashboardOverview({
   sales,
-  stock,
   onOpenReceipt,
   onSwitchTab,
 }: {
   sales: Sale[];
-  stock: Stock;
   onOpenReceipt: (sale: Sale) => void;
   onSwitchTab: (tab: "products" | "kasir" | "terjual" | "stok") => void;
 }) {
+  const { products } = useCatalog();
+  const { stockOf } = useSales();
+  const priced = useMemo(() => products.filter((p) => p.price), [products]);
+
   // 1. Perhitungan Omzet & Metrik Utama
   const totalRevenue = useMemo(() => sales.reduce((sum, s) => sum + s.total, 0), [sales]);
   const totalItemsSold = useMemo(
@@ -35,18 +36,12 @@ export function DashboardOverview({
 
   // 2. Analisis Stok
   const lowStockItems = useMemo(() => {
-    return priced.filter((p) => {
-      const qty = stock[p.slug] !== undefined ? stock[p.slug] : (p.stock ?? 20);
-      return qty <= LOW_STOCK;
-    });
-  }, [stock]);
+    return priced.filter((p) => stockOf(p.slug) <= LOW_STOCK);
+  }, [priced, stockOf]);
 
   const outOfStockItems = useMemo(() => {
-    return priced.filter((p) => {
-      const qty = stock[p.slug] !== undefined ? stock[p.slug] : (p.stock ?? 20);
-      return qty <= 0;
-    });
-  }, [stock]);
+    return priced.filter((p) => stockOf(p.slug) <= 0);
+  }, [priced, stockOf]);
 
   // 3. Tren 7 Hari Terakhir untuk Grafik Batang
   const last7Days = useMemo(() => {
@@ -118,7 +113,7 @@ export function DashboardOverview({
     return Array.from(map.values())
       .sort((a, b) => b.qty - a.qty)
       .slice(0, 5);
-  }, [sales]);
+  }, [sales, products]);
 
   const maxSoldQty = useMemo(() => {
     return Math.max(...topProducts.map((p) => p.qty), 1);
@@ -217,10 +212,7 @@ export function DashboardOverview({
             <div>
               <strong>Perhatian: Ada {lowStockItems.length} produk yang stoknya menipis!</strong>
               <p>
-                {lowStockItems.map((p) => {
-                  const q = stock[p.slug] !== undefined ? stock[p.slug] : (p.stock ?? 0);
-                  return `${p.name} (sisa ${q})`;
-                }).join(" · ")}
+                {lowStockItems.map((p) => `${p.name} (sisa ${stockOf(p.slug)})`).join(" · ")}
               </p>
             </div>
           </div>

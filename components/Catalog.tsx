@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { categories, searchProducts, type CategoryId } from "@/data/products";
-import { useManageableProducts } from "@/lib/products-store";
+import { useCatalog } from "@/lib/catalog";
 import { waLink } from "@/lib/brand";
 import { ProductCard } from "./ProductCard";
 
@@ -13,7 +13,7 @@ export function Catalog({
   query?: string;
   initialCategory?: CategoryId | "semua";
 }) {
-  const { products: currentProducts } = useManageableProducts();
+  const { products: currentProducts } = useCatalog();
   const [category, setCategory] = useState<CategoryId | "semua">(initialCategory);
 
   const list = useMemo(

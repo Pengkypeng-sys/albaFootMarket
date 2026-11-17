@@ -2,11 +2,13 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { featured, formatRp, thumb } from "@/data/products";
+import { formatRp, thumb } from "@/data/products";
+import { useCatalog } from "@/lib/catalog";
 
 const flakes = Array.from({ length: 9 }, (_, i) => i);
 
 export function Fridge() {
+  const { featured } = useCatalog();
   const [open, setOpen] = useState(false);
   const [current, setCurrent] = useState(0);
   const touchStartX = useRef<number | null>(null);
@@ -17,11 +19,11 @@ export function Fridge() {
 
   const prev = useCallback(() => {
     setCurrent((i) => (i > 0 ? i - 1 : featured.length - 1));
-  }, []);
+  }, [featured.length]);
 
   const next = useCallback(() => {
     setCurrent((i) => (i < featured.length - 1 ? i + 1 : 0));
-  }, []);
+  }, [featured.length]);
 
   // Otomatis bergeser pelan setiap 5 detik agar interaktif, pause saat hover/interaksi
   useEffect(() => {

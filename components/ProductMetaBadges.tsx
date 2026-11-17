@@ -1,17 +1,9 @@
 "use client";
 
-import { useLiveProductMeta } from "@/lib/sales";
+import { useSales } from "@/lib/sales";
 
-export function ProductMetaBadges({
-  slug,
-  baseStock = 25,
-  baseSold = 120,
-}: {
-  slug: string;
-  baseStock?: number;
-  baseSold?: number;
-}) {
-  const { stock, sold, isLowStock, isOutOfStock } = useLiveProductMeta(slug, baseStock, baseSold);
+export function ProductMetaBadges({ slug }: { slug: string }) {
+  const { stock, sold, isLowStock, isOutOfStock } = useSales().metaOf(slug);
 
   return (
     <div className="detail-meta-badges">

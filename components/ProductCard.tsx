@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { formatRp, getCategoryVariants, thumb, type Product } from "@/data/products";
+import { formatRp, thumb, type Product } from "@/data/products";
 import { useCart } from "@/lib/cart";
-import { useLiveProductMeta } from "@/lib/sales";
+import { useCatalog } from "@/lib/catalog";
+import { useSales } from "@/lib/sales";
 import { useReveal } from "./Reveal";
 import { flyToCart } from "@/lib/fly";
 import { Stepper } from "./Stepper";
@@ -15,14 +16,11 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
   const [modalOpen, setModalOpen] = useState(false);
   const qty = lines.find((l) => l.slug === product.slug)?.qty ?? 0;
   const ref = useReveal<HTMLElement>();
-  const variants = getCategoryVariants(product.category);
+  const { variantsOf } = useCatalog();
+  const variants = variantsOf(product.category);
   const hasVariants = variants.length > 1;
 
-  const { stock, sold, isLowStock, isOutOfStock } = useLiveProductMeta(
-    product.slug,
-    product.stock ?? 25,
-    product.sold ?? 120,
-  );
+  const { stock, sold, max, isLowStock, isOutOfStock } = useSales().metaOf(product.slug);
 
   return (
     <article
@@ -89,7 +87,7 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
         </div>
       </div>
       {qty > 0 ? (
-        <Stepper qty={qty} onChange={(q) => setQty(product.slug, q)} />
+        <Stepper qty={qty} max={max} onChange={(q) => setQty(product.slug, q)} />
       ) : (
         <button
           className="btn btn-red"

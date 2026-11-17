@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import { CartProvider } from "@/lib/cart";
+import { CatalogProvider } from "@/lib/catalog";
+import { SalesProvider } from "@/lib/sales";
 import { Shell } from "@/components/Shell";
 import { contact } from "@/lib/brand";
 import "./globals.css";
@@ -67,9 +69,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <CartProvider>
-          <Shell>{children}</Shell>
-        </CartProvider>
+        <CatalogProvider>
+          <SalesProvider>
+            <CartProvider>
+              <Shell>{children}</Shell>
+            </CartProvider>
+          </SalesProvider>
+        </CatalogProvider>
       </body>
     </html>
   );

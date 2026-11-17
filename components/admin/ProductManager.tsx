@@ -2,7 +2,8 @@
 
 import { useMemo, useRef, useState } from "react";
 import { categories, formatRp, thumb, type CategoryId, type Product } from "@/data/products";
-import { compressProductPhoto, useManageableProducts } from "@/lib/products-store";
+import { compressProductPhoto, useCatalog } from "@/lib/catalog";
+import { useSales } from "@/lib/sales";
 
 const presetPhotos = [
   { label: "Sambosa", src: "/products/sambosa-frozen.jpg" },
@@ -17,7 +18,8 @@ const presetPhotos = [
 ];
 
 export function ProductManager() {
-  const { products, saveProduct, deleteProduct, resetToDefault } = useManageableProducts();
+  const { products, saveProduct, deleteProduct, resetToDefault } = useCatalog();
+  const { stockOf, setStockOf } = useSales();
   const [search, setSearch] = useState("");
   const [activeCat, setActiveCat] = useState<CategoryId | "semua">("semua");
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
@@ -59,7 +61,7 @@ export function ProductManager() {
     setFormPack(p.pack || p.packSize || "");
     setFormPrice(p.price || "");
     setFormWholesale(p.wholesalePrice || "");
-    setFormStock(p.stock !== undefined ? p.stock : 20);
+    setFormStock(stockOf(p.slug));
     setFormSummary(p.summary || "");
     setFormImage(p.image || "/products/sambosa-frozen.jpg");
     setFormFeatured(Boolean(p.featured));
@@ -107,12 +109,17 @@ export function ProductManager() {
       return;
     }
 
-    const slug = isNew
-      ? formName
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, "-")
-          .replace(/(^-|-$)/g, "") || `produk-${Date.now()}`
-      : editingProduct!.slug;
+    const base =
+      formName
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "") || `produk-${Date.now()}`;
+    let slug = isNew ? base : editingProduct!.slug;
+    if (isNew) {
+      // Slug harus unik: slug kembar akan menimpa produk lain.
+      for (let n = 2; products.some((p) => p.slug === slug); n++) slug = `${base}-${n}`;
+    }
+    const stock = Number.isFinite(formStock) ? Math.max(0, Math.floor(formStock)) : 0;
 
     const updated: Product = {
       ...(editingProduct || {}),
@@ -123,7 +130,7 @@ export function ProductManager() {
       pack: formPack.trim() || undefined,
       price: typeof formPrice === "number" ? formPrice : undefined,
       wholesalePrice: typeof formWholesale === "number" ? formWholesale : undefined,
-      stock: typeof formStock === "number" ? formStock : 20,
+      stock,
       summary: formSummary.trim(),
       keywords: `${formName} ${formFlavor} ${formCategory}`.toLowerCase(),
       image: formImage,
@@ -132,6 +139,7 @@ export function ProductManager() {
     };
 
     saveProduct(updated);
+    setStockOf(slug, stock);
     closeForm();
   };
 
@@ -221,7 +229,7 @@ export function ProductManager() {
                 <strong className="pm-card-price">
                   {p.price ? formatRp(p.price) : "Tanya via WA"}
                 </strong>
-                <span className="pm-card-stock">Stok: {p.stock ?? 20}</span>
+                <span className="pm-card-stock">Stok: {stockOf(p.slug)}</span>
               </div>
             </div>
 
@@ -239,6 +247,7 @@ export function ProductManager() {
                 onClick={() => {
                   if (confirm(`Hapus produk "${p.name}" dari katalog website?`)) {
                     deleteProduct(p.slug);
+                    setStockOf(p.slug, null);
                   }
                 }}
               >

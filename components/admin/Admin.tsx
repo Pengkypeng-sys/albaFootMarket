@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { categories, formatRp, products, thumb } from "@/data/products";
+import { categories, formatRp, thumb, type Product } from "@/data/products";
+import { parseOrderMessage } from "@/lib/cart";
+import { useCatalog } from "@/lib/catalog";
 import { dayKey, LOW_STOCK, saleTotal, useAdminAuth, useSales, type Sale, type SaleItem, type Stock } from "@/lib/sales";
 import { AdminLogin } from "./AdminLogin";
 import { DashboardOverview } from "./DashboardOverview";
@@ -11,22 +13,23 @@ import { formatWaktu, Receipt } from "./Receipt";
 
 type Tab = "overview" | "products" | "kasir" | "terjual" | "stok" | "settings";
 
-const tabs: { id: Tab; label: string; icon: string }[] = [
+const tabs: { id: Tab; label: string; icon: string; badge?: string }[] = [
   { id: "overview", label: "Ringkasan", icon: "📊" },
-  { id: "products", label: "Kelola Produk & Foto", icon: "📸" },
-  { id: "kasir", label: "Kasir POS", icon: "🛒" },
-  { id: "terjual", label: "Laporan Penjualan", icon: "🧾" },
-  { id: "stok", label: "Kelola Stok", icon: "📦" },
+  { id: "products", label: "Produk & Foto", icon: "📸", badge: "Foto" },
+  { id: "kasir", label: "Kasir", icon: "🛒", badge: "POS" },
+  { id: "terjual", label: "Penjualan", icon: "🧾" },
+  { id: "stok", label: "Stok", icon: "📦" },
   { id: "settings", label: "Pengaturan", icon: "⚙️" },
 ];
 
 const payments = ["Tunai", "Transfer", "QRIS"];
-const priced = products.filter((p) => p.price);
 
 /** Dashboard pemilik: kasir + kuitansi, ringkasan analytics, daftar terjual, daftar stok. */
 export function Admin() {
   const auth = useAdminAuth();
-  const { sales, stock, ready, record, remove, setStockOf } = useSales();
+  const { products } = useCatalog();
+  const { sales, stock, ready, stockOf, record, remove, setStockOf } = useSales();
+  const priced = useMemo(() => products.filter((p) => p.price), [products]);
   const [tab, setTab] = useState<Tab>("overview");
   const [shown, setShown] = useState<Sale | null>(null);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
@@ -79,8 +82,7 @@ export function Admin() {
             >
               <span className="adm-side-icon">{t.icon}</span>
               <span className="adm-side-label">{t.label}</span>
-              {t.id === "kasir" && <span className="adm-side-badge">POS</span>}
-              {t.id === "products" && <span className="adm-side-badge">Foto &amp; Data</span>}
+              {t.badge ? <span className="adm-side-badge">{t.badge}</span> : null}
               <span className="adm-side-arrow" aria-hidden>›</span>
             </button>
           ))}
@@ -155,7 +157,6 @@ export function Admin() {
           {tab === "overview" ? (
             <DashboardOverview
               sales={sales}
-              stock={stock}
               onOpenReceipt={setShown}
               onSwitchTab={(target) => setTab(target as Tab)}
             />
@@ -165,7 +166,8 @@ export function Admin() {
 
           {tab === "kasir" ? (
             <Kasir
-              stock={stock}
+              priced={priced}
+              stockOf={stockOf}
               onSave={(s) => setShown(record(s))}
               onQuickOverview={() => setTab("overview")}
             />
@@ -176,7 +178,7 @@ export function Admin() {
           ) : null}
 
           {tab === "stok" ? (
-            <Stok stock={stock} sales={sales} onSet={setStockOf} />
+            <Stok priced={priced} stockOf={stockOf} hasOverride={(slug) => slug in stock} sales={sales} onSet={setStockOf} />
           ) : null}
 
           {tab === "settings" ? (
@@ -193,11 +195,13 @@ export function Admin() {
 
 /* ---------- 1. KASIR POS ---------- */
 function Kasir({
-  stock,
+  priced,
+  stockOf,
   onSave,
   onQuickOverview,
 }: {
-  stock: Record<string, number>;
+  priced: Product[];
+  stockOf: (slug: string) => number;
   onSave: (s: { buyer: string; pay: string; note: string; items: SaleItem[] }) => void;
   onQuickOverview: () => void;
 }) {
@@ -207,6 +211,8 @@ function Kasir({
   const [note, setNote] = useState("");
   const [search, setSearch] = useState("");
   const [activeCat, setActiveCat] = useState("semua");
+  const [orderText, setOrderText] = useState("");
+  const [orderInfo, setOrderInfo] = useState<{ ok: boolean; text: string } | null>(null);
 
   const filteredPriced = useMemo(() => {
     return priced.filter((p) => {
@@ -217,23 +223,53 @@ function Kasir({
         p.summary.toLowerCase().includes(search.toLowerCase());
       return matchCat && matchQuery;
     });
-  }, [activeCat, search]);
+  }, [priced, activeCat, search]);
 
   const items: SaleItem[] = priced
     .filter((p) => qty[p.slug] > 0)
     .map((p) => ({ slug: p.slug, name: p.name, pack: p.pack, qty: qty[p.slug], price: p.price! }));
   const total = saleTotal(items);
   const totalItemsCount = items.reduce((a, i) => a + i.qty, 0);
-  const over = items.filter((i) => i.slug in stock && i.qty > stock[i.slug]);
+  const over = items.filter((i) => i.qty > stockOf(i.slug));
 
-  const bump = (slug: string, d: number) =>
-    setQty((m) => ({ ...m, [slug]: Math.max(0, (m[slug] ?? 0) + d) }));
+  const bump = (p: Product, d: number) =>
+    setQty((m) => ({ ...m, [p.slug]: Math.min(stockOf(p.slug), Math.max(0, (m[p.slug] ?? 0) + d)) }));
 
   const save = () => {
+    if (over.length) return;
     onSave({ buyer: buyer.trim(), pay, note: note.trim(), items });
     setQty({});
     setBuyer("");
     setNote("");
+    setOrderText("");
+    setOrderInfo(null);
+  };
+
+  /** Isi keranjang kasir dari teks pesanan WhatsApp pelanggan (kode pesanan di akhir pesan). */
+  const loadOrder = () => {
+    const parsed = parseOrderMessage(orderText);
+    if (!parsed || parsed.items.length === 0) {
+      setOrderInfo({ ok: false, text: "Kode pesanan tidak ditemukan. Tempel seluruh pesan WhatsApp dari pelanggan." });
+      return;
+    }
+    const next: Record<string, number> = {};
+    const skipped: string[] = [];
+    for (const l of parsed.items) {
+      const p = priced.find((x) => x.slug === l.slug);
+      if (!p) skipped.push(`${l.slug} (tidak ada/belum berharga)`);
+      else {
+        const qty = Math.min(l.qty, stockOf(p.slug));
+        if (qty < l.qty) skipped.push(`${p.name} (diminta ${l.qty}, stok ${stockOf(p.slug)})`);
+        if (qty > 0) next[p.slug] = (next[p.slug] ?? 0) + qty;
+      }
+    }
+    setQty(next);
+    setBuyer(parsed.name);
+    setNote(parsed.note ? `Pesanan WhatsApp. ${parsed.note}` : "Pesanan WhatsApp");
+    setOrderInfo({
+      ok: skipped.length === 0,
+      text: skipped.length ? `Dimuat sebagian. Periksa: ${skipped.join("; ")}` : "Pesanan dimuat. Cek lalu simpan transaksi.",
+    });
   };
 
   return (
@@ -276,7 +312,7 @@ function Kasir({
         {/* Daftar Produk Kasir */}
         <ul className="adm-pick">
           {filteredPriced.map((p) => {
-            const left = stock[p.slug];
+            const left = stockOf(p.slug);
             const isSelected = (qty[p.slug] ?? 0) > 0;
             return (
               <li key={p.slug} data-cat={p.category} data-on={isSelected}>
@@ -289,17 +325,20 @@ function Kasir({
                   <small>
                     {p.pack ? `${p.pack} · ` : ""}
                     <b style={{ color: "var(--red)" }}>{formatRp(p.price!)}</b>
-                    {left !== undefined ? (
-                      <em data-low={left <= LOW_STOCK}> · stok {left}</em>
-                    ) : null}
+                    <em data-low={left <= LOW_STOCK}> · {left <= 0 ? "stok habis" : `stok ${left}`}</em>
                   </small>
                 </div>
                 <span className="qty">
-                  <button type="button" aria-label={`Kurangi ${p.name}`} onClick={() => bump(p.slug, -1)}>
+                  <button type="button" aria-label={`Kurangi ${p.name}`} onClick={() => bump(p, -1)}>
                     −
                   </button>
                   <span>{qty[p.slug] ?? 0}</span>
-                  <button type="button" aria-label={`Tambah ${p.name}`} onClick={() => bump(p.slug, 1)}>
+                  <button
+                    type="button"
+                    aria-label={`Tambah ${p.name}`}
+                    disabled={(qty[p.slug] ?? 0) >= left}
+                    onClick={() => bump(p, 1)}
+                  >
                     +
                   </button>
                 </span>
@@ -332,6 +371,24 @@ function Kasir({
       {/* Sisi Ringkasan Transaksi Pembeli */}
       <aside className="adm-pay" id="adm-pay-section">
         <h2>Detail Transaksi</h2>
+        <details className="adm-order-import" open={Boolean(orderInfo)}>
+          <summary>Muat pesanan WhatsApp pelanggan</summary>
+          <textarea
+            rows={4}
+            value={orderText}
+            onChange={(e) => setOrderText(e.target.value)}
+            placeholder="Tempel pesan pesanan dari WhatsApp di sini"
+            aria-label="Teks pesanan WhatsApp"
+          />
+          <button type="button" className="btn btn-sm" disabled={!orderText.trim()} onClick={loadOrder}>
+            Isi kasir dari pesanan
+          </button>
+          {orderInfo ? (
+            <p className="fine" data-ok={orderInfo.ok} role="status">
+              {orderInfo.text}
+            </p>
+          ) : null}
+        </details>
         <label className="field">
           Nama pembeli <small>(opsional)</small>
           <input
@@ -373,14 +430,14 @@ function Kasir({
 
         {over.length ? (
           <p className="adm-warn">
-            ⚠️ Melebihi stok: {over.map((i) => i.name).join(", ")}. Stok akan jadi 0.
+            ⚠️ Melebihi stok: {over.map((i) => `${i.name} (sisa ${stockOf(i.slug)})`).join(", ")}. Kurangi jumlah atau tambah stok di tab Stok.
           </p>
         ) : null}
 
         <button
           className="btn btn-red btn-block"
           type="button"
-          disabled={!items.length}
+          disabled={!items.length || over.length > 0}
           onClick={save}
         >
           Simpan Transaksi &amp; Buat Kuitansi
@@ -524,11 +581,15 @@ function Terjual({
 
 /* ---------- 3. KELOLA STOK ---------- */
 function Stok({
-  stock,
+  priced,
+  stockOf,
+  hasOverride,
   sales,
   onSet,
 }: {
-  stock: Record<string, number>;
+  priced: Product[];
+  stockOf: (slug: string) => number;
+  hasOverride: (slug: string) => boolean;
   sales: Sale[];
   onSet: (slug: string, qty: number | null) => void;
 }) {
@@ -550,12 +611,9 @@ function Stok({
         p.summary.toLowerCase().includes(search.toLowerCase());
       return matchCat && matchQuery;
     });
-  }, [activeCat, search]);
+  }, [priced, activeCat, search]);
 
-  const low = priced.filter((p) => {
-    const q = stock[p.slug] !== undefined ? stock[p.slug] : (p.stock ?? 20);
-    return q <= LOW_STOCK;
-  });
+  const low = priced.filter((p) => stockOf(p.slug) <= LOW_STOCK);
 
   return (
     <div className="adm-stok">
@@ -566,10 +624,7 @@ function Stok({
             <div>
               <strong>Ada {low.length} produk dengan stok menipis:</strong>
               <p>
-                {low.map((p) => {
-                  const q = stock[p.slug] !== undefined ? stock[p.slug] : (p.stock ?? 0);
-                  return `${p.name} (sisa ${q})`;
-                }).join(" · ")}
+                {low.map((p) => `${p.name} (sisa ${stockOf(p.slug)})`).join(" · ")}
               </p>
             </div>
           </div>
@@ -611,15 +666,15 @@ function Stok({
 
       <ul className="adm-list">
         {filteredPriced.map((p) => {
-          const has = p.slug in stock;
-          const n = stock[p.slug] !== undefined ? stock[p.slug] : (p.stock ?? 0);
+          const has = hasOverride(p.slug);
+          const n = stockOf(p.slug);
           return (
             <li key={p.slug} data-cat={p.category} className="adm-row">
               <span>
                 <strong>{p.name}</strong>
                 <small>
                   {p.pack ? `${p.pack} · ` : ""}
-                  terjual {soldBy[p.slug] ?? p.sold ?? 0} pack
+                  terjual {(p.sold ?? 0) + (soldBy[p.slug] ?? 0)} pack
                 </small>
               </span>
               <span className="adm-stk" data-low={n <= LOW_STOCK}>
@@ -648,7 +703,7 @@ function Stok({
                     className="link-btn"
                     type="button"
                     onClick={() => onSet(p.slug, null)}
-                    title="Hapus pelacakan khusus stok ini"
+                    title="Kembalikan ke stok awal katalog"
                   >
                     Lepas
                   </button>

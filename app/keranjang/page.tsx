@@ -7,11 +7,11 @@ import { orderMessage, useCart, type OrderForm } from "@/lib/cart";
 import { waLink } from "@/lib/brand";
 
 export default function CartPage() {
-  const { lines, clear, ready } = useCart();
+  const { lines, items, total, clear, ready } = useCart();
   const [form, setForm] = useState<OrderForm>({ name: "", mode: "antar", address: "", note: "" });
   const set = (patch: Partial<OrderForm>) => setForm((f) => ({ ...f, ...patch }));
 
-  const message = useMemo(() => orderMessage(lines, form), [lines, form]);
+  const message = useMemo(() => orderMessage(items, form, total), [items, form, total]);
 
   return (
     <section className="wrap section">

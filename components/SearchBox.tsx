@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
 import { categories, searchProducts, thumb, type CategoryId } from "@/data/products";
+import { useCatalog } from "@/lib/catalog";
 
 export function SearchBox({
   large = false,
@@ -17,6 +18,7 @@ export function SearchBox({
   placeholder?: string;
 }) {
   const router = useRouter();
+  const { products } = useCatalog();
   const listId = useId();
   const menuId = useId();
   const root = useRef<HTMLDivElement>(null);
@@ -28,7 +30,7 @@ export function SearchBox({
 
   // Filter saran pencarian berdasarkan kategori yang dipilih
   const hits = q.trim()
-    ? searchProducts(q)
+    ? searchProducts(q, products)
         .filter((p) => category === "semua" || p.category === category)
         .slice(0, 5)
     : [];
